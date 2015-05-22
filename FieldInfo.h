@@ -29,6 +29,8 @@ public:
 	}
 
 	void print() {
+		using namespace field_namespace;
+
 		printf("Field access flags: 0x%04x\n", u2_access_flags);
 		if(u2_access_flags) printf("\t");
 		for(int i = 0; i < 16; i++){
@@ -41,7 +43,7 @@ public:
 		printf("name_index: %u\n", u2_name_index);
 		printf("descriptor_index: %u\n", u2_descriptor_index);
 
-		printf("attributes count: %u\n", attribute_info_array.size());
+		printf("attributes count: %lu\n", attribute_info_array.size());
 		for(int j = 0; j < attribute_info_array.size(); j++){
 			attribute_info_array[j].print();
 		}

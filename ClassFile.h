@@ -71,6 +71,8 @@ public:
 	}
 
 	void print(){
+		using namespace class_namespace;
+
 	 	printf("Magic: 0x%08x\n", u4_magic);
 		printf("Minor version: %u\n", u2_minor_version);
 	 	printf("Major version: %u\n", u2_major_version);
@@ -83,31 +85,33 @@ public:
 
 	 	printf("This class: %u\n", u2_this_class);
 		printf("Super class: %u\n", u2_super_class);
-		printf("interfaces count: %u\n", u2_interfaces_array.size());
+		printf("interfaces count: %lu\n", u2_interfaces_array.size());
 		for(int j = 0; j < u2_interfaces_array.size(); j++) {
 			printf("%u\n", u2_interfaces_array[j]);
 		}
 
-		printf("fields count: %u\n", field_info_array.size());
+		printf("fields count: %lu\n", field_info_array.size());
 		for(int j = 0; j < field_info_array.size(); j++){
-			fields_info_array[j].print();
+			field_info_array[j].print();
 		}
-		printf("methods count: %u\n", method_info_array.size());
+		printf("methods count: %lu\n", method_info_array.size());
 		for(int j = 0; j < method_info_array.size(); j++){
 			method_info_array[j].print();
 		}
-		printf("attributes count: %u\n", attribute_info_array.size());
+		printf("attributes count: %lu\n", attribute_info_array.size());
 		for(int j = 0; j < attribute_info_array.size(); j++){
 			attribute_info_array[j].print();
 		}
 	}
 
 	void tmp_unused_for_now(){
+		using namespace class_namespace;
+		
 		printf("Access flags: 0x%04x\n", u2_access_flags);
 		if(u2_access_flags) printf("\t");
 		for(int i = 0; i < 16; i++){
 			if(u2_access_flags & 1<<i){
-				printf("%s, ", access_flags_tt[i].c_str());
+				printf("%s, ", class_access_flags_tt[i].c_str());
 			}
 		}
 		printf("\n");
