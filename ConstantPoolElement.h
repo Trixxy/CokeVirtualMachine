@@ -17,9 +17,7 @@ struct cp_Class: public ConstantPoolElement {
 	cp_Class(CodeHandler & coke):u2_name_index(coke.fetch(U2)){}
 	virtual unsigned int get_tag(){ return tag; };
 
-	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+	virtual void print(){		
 		printf("#%u //u2_name_index", u2_name_index);
 	};
 };
@@ -30,16 +28,8 @@ struct cp_Fieldref: public ConstantPoolElement {
 	cp_Fieldref(CodeHandler & coke):u2_class_index(coke.fetch(U2)), u2_name_and_type_index(coke.fetch(U2)){}
 	virtual unsigned int get_tag(){ return tag; };
 
-	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
-		// u2 class_index;
-	printf("#%u", coke.fetch(U2));
-	// u2 name_and_type_index;
-	printf(".#%u", coke.fetch(U2));
-	
-	printf(" //class_index.name_and_type_index");
-
+	virtual void print(){		
+		printf("#%u.#%u //class_index.name_and_type_index", u2_class_index, u2_name_and_type_index);
 	};
 };
 struct cp_Methodref: public ConstantPoolElement {
@@ -49,16 +39,8 @@ struct cp_Methodref: public ConstantPoolElement {
 	cp_Methodref(CodeHandler & coke):u2_class_index(coke.fetch(U2)), u2_name_and_type_index(coke.fetch(U2)){}
 	virtual unsigned int get_tag(){ return tag; };
 
-	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
-	// u2 class_index;
-	printf("#%u", coke.fetch(U2));
-	// u2 name_and_type_index;
-	printf(".#%u", coke.fetch(U2));
-
-	printf(" //class_index.name_and_type_index");
-
+	virtual void print(){		
+		printf("#%u.#%u //class_index.name_and_type_index", u2_class_index, u2_name_and_type_index);
 	};
 };
 struct cp_InterfaceMethodref: public ConstantPoolElement {
@@ -68,16 +50,9 @@ struct cp_InterfaceMethodref: public ConstantPoolElement {
 	cp_InterfaceMethodref(CodeHandler & coke):u2_class_index(coke.fetch(U2)),u2_name_and_type_index(coke.fetch(U2)){}
 	virtual unsigned int get_tag(){ return tag; };
 
-	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
-			// u2 class_index;
-	printf("#%u", coke.fetch(U2));
-	// u2 name_and_type_index;
-	printf(", #%u", coke.fetch(U2));
-
-	printf(" //TOTO(class_index, name_and_type_index)");
-
+	virtual void print(){		
+		printf("#%u, #%u", u2_class_index, u2_name_and_type_index);
+		printf(" //TOTO(class_index, name_and_type_index)");
 	};
 };
 struct cp_String: public ConstantPoolElement {
@@ -86,14 +61,8 @@ struct cp_String: public ConstantPoolElement {
 	cp_String(CodeHandler & coke):u2_string_index(coke.fetch(U2)){}
 	virtual unsigned int get_tag(){ return tag; };
 
-	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
-			// u2 string_index;
-	printf("#%u", coke.fetch(U2));
-
-	printf(" //string_index");
-
+	virtual void print(){		
+		printf("#%u //string_index", u2_string_index);
 	};
 };
 struct cp_Integer: public ConstantPoolElement {
@@ -103,13 +72,7 @@ struct cp_Integer: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-
-			// u4 bytes;
-	printf("%u", coke.fetch(U4));
-	
-	printf(" //bytes");
-
+		printf("%u //bytes", u4_bytes);
 	};
 };
 struct cp_Float: public ConstantPoolElement {
@@ -119,8 +82,7 @@ struct cp_Float: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+		printf("%u //bytes", u4_bytes);
 	};
 };
 struct cp_Long: public ConstantPoolElement {
@@ -131,8 +93,7 @@ struct cp_Long: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+		printf("%u<<32|%u //high_bytes, low_bytes", u4_high_bytes, u4_low_bytes);
 	};
 };
 struct cp_Double: public ConstantPoolElement {
@@ -143,8 +104,7 @@ struct cp_Double: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+		printf("%u<<32|%u //high_bytes, low_bytes", u4_high_bytes, u4_low_bytes);
 	};
 };
 struct cp_NameAndType: public ConstantPoolElement {
@@ -155,15 +115,14 @@ struct cp_NameAndType: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+		printf("#%u:#%u //name_index, descriptor_index", u2_name_index, u2_descriptor_index);
 	};
 };
 struct cp_Utf8: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Utf8;
-	unsigned int u2_length; //1
 	std::string u1_bytes_array; //2 u1_bytes[length]
-	cp_Utf8(CodeHandler & coke):u2_length(coke.fetch(U2)){
+	cp_Utf8(CodeHandler & coke){
+		unsigned int u2_length = coke.fetch(U2);
 		std::stringstream ss;
 		for(int i = 0; i < u2_length; i++)
 			ss << (char)coke.fetch(U1);
@@ -172,8 +131,7 @@ struct cp_Utf8: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+		printf("\"%s\" //Utf8()", u1_bytes_array.c_str());
 	};
 };
 struct cp_MethodHandle: public ConstantPoolElement {
@@ -184,8 +142,8 @@ struct cp_MethodHandle: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+		printf("%u, #%u", u1_reference_kind, u2_reference_index);
+		printf(" //TOTO(reference_kind, reference_index)");
 	};
 };
 struct cp_MethodType: public ConstantPoolElement {
@@ -194,9 +152,9 @@ struct cp_MethodType: public ConstantPoolElement {
 	cp_MethodType(CodeHandler & coke):u2_descriptor_index(coke.fetch(U2)){}
 	virtual unsigned int get_tag(){ return tag; };
 
-	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+	virtual void print(){		
+		printf("#%u", u2_descriptor_index);
+		printf(" //TOTO(descriptor_index)");
 	};
 };
 struct cp_InvokeDynamic: public ConstantPoolElement {
@@ -206,9 +164,9 @@ struct cp_InvokeDynamic: public ConstantPoolElement {
 	cp_InvokeDynamic(CodeHandler & coke):u2_bootstrap_method_attr_index(coke.fetch(U2)), u2_name_and_type_index(coke.fetch(U2)){}
 	virtual unsigned int get_tag(){ return tag; };
 
-	virtual void print(){
-		printf("#%u = %-20s", i, constant_types_tt[tag].c_str());
-		
+	virtual void print(){		
+		printf("#%u, #%u", u2_bootstrap_method_attr_index, u2_name_and_type_index);
+		printf(" //TOTO(bootstrap_method_attr_index, name_and_type_index)");
 	};
 };
 

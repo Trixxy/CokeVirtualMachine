@@ -38,6 +38,7 @@ public:
 			if(i<10) 		printf("   ");
 			else if(i<100)  printf("  ");
 			else if(i<1000) printf(" ");
+			printf("#%u = %-20s", i, constant_types_tt[elem[i].get_type()].c_str());
 			elem[i].print();
 			printf("\n");
 		}
