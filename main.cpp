@@ -1,13 +1,3 @@
-/*
-
-TODO:
-1) Translation for access flags,
-2) parse access flags to strings,
-3) keep going on to the next entry trype!
-...
-
-*/
-
 #include <cstdio>
 #include <vector>
 #include <fstream>
@@ -17,13 +7,10 @@ TODO:
 #include <string>
 #include <deque>
 #include <cassert>
-// #include "DefConstTrans.h"
-// #include "ConstantPool.h"
 #include "ClassFile.h"
 #include "CodeHandler.h"
-// #include "CodeHandler.h"
-
-
+// #include "DefConstTrans.h"
+// #include "ConstantPool.h"
 
 // inline int exec(const byte & code){
 // 	if(NULL == exec_map[code]){
@@ -34,229 +21,6 @@ TODO:
 // 		return 0;
 // 	}
 // }
-
-// void process_constant_pool(ClassFile & coke){
-// 	// u2	constant_pool_count;
-// 	int count = coke.fetch(U2);
-	
-// 	printf("Constant pool count: %u\n", count);
-	
-// 	//cp_info	constant_pool[constant_pool_count-1];
-// 	printf("Constant pool:\n");	
-// 	for(int i = 1, current_const; i < count;i++){
-
-
-		// current_const = coke.fetch(U1);
-		// if(i<10) 		printf("   ");
-		// else if(i<100)  printf("  ");
-		// else if(i<1000) printf(" ");
-		// printf("#%u = %-20s", i, constant_types_tt[current_const].c_str());
-		// switch(current_const){
-		// 	case CONSTANT_Class:
-		// 		// u2 name_index;
-		// 		printf("#%u", coke.fetch(U2));
-				
-		// 		printf(" //name_index");
-		// 		break;
-		// 	case CONSTANT_Fieldref:
-		// 		// u2 class_index;
-		// 		printf("#%u", coke.fetch(U2));
-		// 		// u2 name_and_type_index;
-		// 		printf(".#%u", coke.fetch(U2));
-				
-		// 		printf(" //class_index.name_and_type_index");
-		// 		break;
-		// 	case CONSTANT_Methodref:
-		// 		// u2 class_index;
-		// 		printf("#%u", coke.fetch(U2));
-		// 		// u2 name_and_type_index;
-		// 		printf(".#%u", coke.fetch(U2));
-
-		// 		printf(" //class_index.name_and_type_index");
-		// 		break;
-		// 	case CONSTANT_InterfaceMethodref:
-		// 		// u2 class_index;
-		// 		printf("#%u", coke.fetch(U2));
-		// 		// u2 name_and_type_index;
-		// 		printf(", #%u", coke.fetch(U2));
-
-		// 		printf(" //TOTO(class_index, name_and_type_index)");
-		// 		break;
-		// 	case CONSTANT_String:
-		// 		// u2 string_index;
-		// 		printf("#%u", coke.fetch(U2));
-
-		// 		printf(" //string_index");
-		// 		break;
-		// 	case CONSTANT_Integer:
-		// 		// u4 bytes;
-		// 		printf("%u", coke.fetch(U4));
-				
-		// 		printf(" //bytes");
-		// 		break;
-		// 	case CONSTANT_Float:
-		// 		// u4 bytes;
-		// 		printf("%u", coke.fetch(U4));
-
-		// 		printf(" //bytes");
-		// 		break;
-		// 	case CONSTANT_Long:
-		// 		// u4 high_bytes;
-		// 		printf("%u", coke.fetch(U4));
-		// 		// u4 low_bytes;
-		// 		printf("<<32|%u", coke.fetch(U4));
-
-		// 		printf(" //high_bytes, low_bytes");
-		// 		break;
-		// 	case CONSTANT_Double:
-		// 		// u4 high_bytes;
-		// 		printf("%u", coke.fetch(U4));
-		// 		// u4 low_bytes;
-		// 		printf("<<32|%u", coke.fetch(U4));
-				
-		// 		printf(" //high_bytes, low_bytes");
-		// 		break;
-		// 	case CONSTANT_NameAndType:
-		// 		// u2 name_index;
-		// 		printf("#%u", coke.fetch(U2));
-		// 		// u2 descriptor_index;
-		// 		printf(":#%u", coke.fetch(U2));
-
-		// 		printf(" //name_index, descriptor_index");
-		// 		break;
-		// 	case CONSTANT_Utf8:
-		// 		// u2 length;
-		// 		// u1 bytes[length];
-		// 		printf("\"");
-		// 		for(int utf8_len = coke.fetch(U2); utf8_len > 0; utf8_len--)
-		// 			printf("%c", coke.fetch(U1));
-				
-		// 		printf("\" //Utf8()");
-		// 		break;
-		// 	case CONSTANT_MethodHandle:
-		// 		// u1 reference_kind;
-		// 		printf("%u", coke.fetch(U1));
-		// 		// u2 reference_index;
-		// 		printf(", #%u", coke.fetch(U2));
-
-		// 		printf(" //TOTO(reference_kind, reference_index)");
-		// 		break;
-		// 	case CONSTANT_MethodType:
-		// 		// u2 descriptor_index;
-		// 		printf("#%u", coke.fetch(U2));
-
-		// 		printf(" //TOTO(descriptor_index)");
-		// 		break;
-		// 	case CONSTANT_InvokeDynamic:
-		// 		// u2 bootstrap_method_attr_index;
-		// 		printf("#%u", coke.fetch(U2));
-		// 		// u2 name_and_type_index;
-		// 		printf(", #%u", coke.fetch(U2));
-
-		// 		printf(" //TOTO(bootstrap_method_attr_index, name_and_type_index)");
-		// 		break;	
-		// 	default:
-		// 		std::cerr << "Unrecognized constant pool tag.\n";
-		// }
-		// printf("\n");
-// 	}
-// }
-
-
-
-void println(CodeHandler & coke){
-// // 	  u4             magic;
-// 	printf("Magic: 0x%08x\n", coke.fetch(U4));
-// //    u2             minor_version;
-// 	printf("Minor version: %u\n", coke.fetch(U2));
-// //    u2             major_version;
-// 	printf("Major version: %u\n", coke.fetch(U2));
-
-// 	//constant pool
-// 	process_constant_pool(coke);
-
-// 	//accesscflags
-// 	process_access_flags(coke);
-
-// //    u2             this_class;
-// 	printf("This class: %u\n", coke.fetch(U2));
-// //    u2             super_class;
-// 	printf("Sÿper class: %u\n", coke.fetch(U2));
-// //    u2             interfaces_count;
-// 	int ic;
-// 	printf("interfaces count: %u\n", ic=coke.fetch(U2));
-// //    u2             interfaces[interfaces_count];
-// 	for(int j = 0; j < ic; j++){
-// 		coke.fetch(U2);
-// 	}
-//    u2             fields_count;
-	int fc;
-	printf("fields count: %u\n", fc=coke.fetch(U2));
-//    field_info     fields[fields_count];
-	for(int j = 0; j < fc; j++){
-//	  u2             access_flags;
-		coke.fetch(U2);
-//    u2             name_index;
-		coke.fetch(U2);
-//    u2             descriptor_index;
-		coke.fetch(U2);
-//    u2             attributes_count;
-		int attrc = coke.fetch(U2);
-//    attribute_info attributes[attributes_count];
-		for(int k = 0; k < attrc; k++) {
-// 	  u2 attribute_name_index;
-			coke.fetch(U2);
-// 	  u4 attribute_length;
-			int attrlen = coke.fetch(U4);
-// 	  u1 info[attribute_length];
-			for(int m = 0; m < attrlen; m++) {
-				coke.fetch(U1);
-			}
-		}
-
-	}
-//    u2             methods_count;
-	int mc;
-	printf("methods count: %u\n", mc=coke.fetch(U2));
-//    method_info    methods[methods_count];
-	for(int j = 0; j < mc; j++) {
-// 	  u2             access_flags;
-		coke.fetch(U2);
-// 	  u2             name_index;
-		coke.fetch(U2);
-// 	  u2             descriptor_index;
-		coke.fetch(U2);
-// 	  u2             attributes_count;
-		int attrc = coke.fetch(U2);
-// 	  attribute_info attributes[attributes_countx];
-		for(int k = 0; k < attrc; k++) {
-// 	  u2 attribute_name_index;
-			coke.fetch(U2);
-// 	  u4 attribute_length;
-			int attrlen = coke.fetch(U4);
-			printf("Attrleeen: %u\n", attrlen);
-// 	  u1 info[attribute_length];
-			for(int m = 0; m < attrlen; m++) {
-				coke.fetch(U1);
-			}
-		}
-	}
-//    u2             attributes_count;
-	int attrc;
-	printf("attributes count: %u\n", attrc=coke.fetch(U2));
-//    attribute_info attributes[attributes_count];
-	for(int k = 0; k < attrc; k++) {
-// 	  u2 attribute_name_index;
-		coke.fetch(U2);
-// 	  u4 attribute_length;
-		int attrlen = coke.fetch(U4);
-// 	  u1 info[attribute_length];
-		for(int m = 0; m < attrlen; m++) {
-			coke.fetch(U1);
-		}
-	}
-
-}
 
 int main(int argc, char **argv){
 	if(argc <= 1){
@@ -278,11 +42,6 @@ int main(int argc, char **argv){
 
 	return 0;
 }
-
-
-
-
-
 
 
 // void (*exec_map[256])(void);

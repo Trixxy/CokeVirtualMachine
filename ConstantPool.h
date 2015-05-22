@@ -12,6 +12,9 @@ class ConstantPool{
 public:
 	ConstantPool(){}
 	ConstantPool(CodeHandler * _coke):elem(std::vector<ConstantPoolElement*>()), coke(_coke){}
+	~ConstantPool(){
+		for(int i = 0; i < elem.size(); i++) delete elem[i];
+	}
 
 	void push_back(const unsigned int & tag){
 		switch(tag){
@@ -34,12 +37,12 @@ public:
 	}
 
 	void print(){
-		for(int i = 0; i < elem.size(); i++){
+		for(int i = 1; i <= elem.size(); i++){
 			if(i<10) 		printf("   ");
 			else if(i<100)  printf("  ");
 			else if(i<1000) printf(" ");
-			printf("#%u = %-20s", i, constant_types_tt[elem[i]->get_tag()].c_str());
-			elem[i]->print();
+			printf("#%u = %-20s", i, constant_types_tt[elem[i-1]->get_tag()].c_str());
+			elem[i-1]->print();
 			printf("\n");
 		}
 	}

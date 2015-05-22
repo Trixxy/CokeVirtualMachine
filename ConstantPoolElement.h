@@ -131,7 +131,7 @@ struct cp_Utf8: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("\"%s\" //Utf8()", u1_bytes_array.c_str());
+		printf("\"%s\"", u1_bytes_array.c_str());
 	};
 };
 struct cp_MethodHandle: public ConstantPoolElement {
