@@ -77,8 +77,8 @@ public:
 		printf("Minor version: %u\n", u2_minor_version);
 	 	printf("Major version: %u\n", u2_major_version);
 
-// 	//constant pool
-// 	process_constant_pool(coke);
+		//constant pool
+		const_pool.print();
 
 // 	//accesscflags
 // 	process_access_flags(coke);

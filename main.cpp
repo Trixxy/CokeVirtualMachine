@@ -265,6 +265,9 @@ int main(int argc, char **argv){
 	}
 
 	ClassFile cf = ClassFile(std::string(argv[1]));
+
+	cf.print();
+
 	// println(cf.get_code_handler());
 	assert(cf.get_code_handler().size() == cf.get_code_handler().get_cc());
 
