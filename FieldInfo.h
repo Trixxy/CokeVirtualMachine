@@ -29,25 +29,21 @@ public:
 	}
 
 	void print() {
-		printf()
-//	  u2             access_flags;
-		coke.fetch(U2);
-//    u2             name_index;
-		coke.fetch(U2);
-//    u2             descriptor_index;
-		coke.fetch(U2);
-//    u2             attributes_count;
-		int attrc = coke.fetch(U2);
-//    attribute_info attributes[attributes_count];
-		for(int k = 0; k < attrc; k++) {
-// 	  u2 attribute_name_index;
-			coke.fetch(U2);
-// 	  u4 attribute_length;
-			int attrlen = coke.fetch(U4);
-// 	  u1 info[attribute_length];
-			for(int m = 0; m < attrlen; m++) {
-				coke.fetch(U1);
+		printf("Field access flags: 0x%04x\n", u2_access_flags);
+		if(u2_access_flags) printf("\t");
+		for(int i = 0; i < 16; i++){
+			if(u2_access_flags & 1<<i){
+				printf("%s, ", field_access_flags_tt[i].c_str());
 			}
+		}
+		printf("\n");
+
+		printf("name_index: %u\n", u2_name_index);
+		printf("descriptor_index: %u\n", u2_descriptor_index);
+
+		printf("attributes count: %u\n", attribute_info_array.size());
+		for(int j = 0; j < attribute_info_array.size(); j++){
+			attribute_info_array[j].print();
 		}
 	}
 };

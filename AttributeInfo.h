@@ -16,13 +16,13 @@ public:
 
 	void print() {
 		// 	  u2 attribute_name_index;
-		coke.fetch(U2);
+	//	coke.fetch(U2);
 // 	  u4 attribute_length;
-		int attrlen = coke.fetch(U4);
+	//	int attrlen = coke.fetch(U4);
 // 	  u1 info[attribute_length];
-		for(int m = 0; m < attrlen; m++) {
-			coke.fetch(U1);
-		}
+	//	for(int m = 0; m < attrlen; m++) {
+	//		coke.fetch(U1);
+	//	}
 	}
 };
 
