@@ -89,7 +89,9 @@ public:
 
 		printf("fields count: %lu\n", field_info_array.size());
 		for(int j = 0; j < field_info_array.size(); j++){
+			printf("--- Start of field %d:\n", j);	
 			field_info_array[j].print();
+			printf("--- End of field %d:\n", j);	
 		}
 		printf("methods count: %lu\n", method_info_array.size());
 		for(int j = 0; j < method_info_array.size(); j++){
