@@ -10,6 +10,7 @@
 #define _VM_FIELD_INFO_H_
 
 #include <vector>
+#include "DefConstTrans.h"
 #include "AttributeInfo.h"
 #include "CodeHandler.h"
 
@@ -29,16 +30,8 @@ public:
 	}
 
 	void print() {
-		using namespace field_namespace;
-
 		printf("Field access flags: 0x%04x\n", u2_access_flags);
-		if(u2_access_flags) printf("\t");
-		for(int i = 0; i < 16; i++){
-			if(u2_access_flags & 1<<i){
-				printf("%s, ", field_access_flags_tt[i].c_str());
-			}
-		}
-		printf("\n");
+		print_access_flags(u2_access_flags, FieldAccess::flags_tt);
 
 		printf("name_index: %u\n", u2_name_index);
 		printf("descriptor_index: %u\n", u2_descriptor_index);

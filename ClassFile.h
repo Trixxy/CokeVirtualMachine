@@ -70,17 +70,15 @@ public:
 	}
 
 	void print(){
-		using namespace class_namespace;
-
 	 	printf("Magic: 0x%08x\n", u4_magic);
 		printf("Minor version: %u\n", u2_minor_version);
 	 	printf("Major version: %u\n", u2_major_version);
 
 		//constant pool
 		const_pool.print();
-
-// 	//accesscflags
-// 	process_access_flags(coke);
+		
+		printf("Class access flags: 0x%04x\n", u2_access_flags);
+		print_access_flags(u2_access_flags, ClassAccess::flags_tt);
 
 	 	printf("This class: %u\n", u2_this_class);
 		printf("Super class: %u\n", u2_super_class);
@@ -102,20 +100,6 @@ public:
 			attribute_info_array[j].print();
 		}
 	}
-
-	void tmp_unused_for_now(){
-		using namespace class_namespace;
-		
-		printf("Access flags: 0x%04x\n", u2_access_flags);
-		if(u2_access_flags) printf("\t");
-		for(int i = 0; i < 16; i++){
-			if(u2_access_flags & 1<<i){
-				printf("%s, ", class_access_flags_tt[i].c_str());
-			}
-		}
-		printf("\n");
-	}
-
 
 	const unsigned int & get_magic() const {
 		return u4_magic;

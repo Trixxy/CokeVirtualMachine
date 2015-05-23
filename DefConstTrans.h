@@ -90,8 +90,8 @@ enum ClassAttributes{
 	BootstrapMethods = 19
 };
 
-namespace class_namespace {
-	enum ClassAccessFlags{
+namespace ClassAccess {
+	enum Flags{
 		ACC_PUBLIC		= 0x0001,	//Declared public; may be accessed from outside its package.
 		ACC_FINAL		= 0x0010,	//Declared final; no subclasses allowed.
 		ACC_SUPER		= 0x0020,	//Treat superclass methods specially when invoked by the invokespecial instruction.
@@ -102,7 +102,7 @@ namespace class_namespace {
 		ACC_ENUM		= 0x4000	//Declared as an enum type.
 	};
 
-	std::string class_access_flags_tt[] = {
+	std::string flags_tt[] = {
 		"ACC_PUBLIC","","","",
 		"ACC_FINAL","ACC_SUPER","","",
 		"","ACC_INTERFACE","ACC_ABSTRACT","",
@@ -110,8 +110,8 @@ namespace class_namespace {
 	};
 }
 
-namespace field_namespace {
-	enum FieldAccessFlags{
+namespace FieldAccess {
+	enum Flags{
 		ACC_PUBLIC		= 0x0001,	//Declared public; may be accessed from outside its package.
 		ACC_PRIVATE		= 0x0002,	//Declared private; usable only within the defining class.
 		ACC_PROTECTED	= 0x0004,	//Declared protected; may be accessed within subclasses.
@@ -123,7 +123,7 @@ namespace field_namespace {
 		ACC_ENUM		= 0x4000	//Declared as an element of an enum.
 	};
 
-	std::string field_access_flags_tt[] = {
+	std::string flags_tt[] = {
 		"ACC_PUBLIC","ACC_PRIVATE","ACC_PROTECTED","ACC_STATIC",
 		"ACC_FINAL","","ACC_VOLATILE","ACC_TRANSIENT",
 		"","","","",
@@ -131,8 +131,8 @@ namespace field_namespace {
 	};
 }
 
-namespace method_namespace {
-	enum MethodAccessFlags{
+namespace MethodAccess {
+	enum Flags{
 		ACC_PUBLIC			= 0x0001,	//Declared public; may be accessed from outside its package.
 		ACC_PRIVATE			= 0x0002,	//Declared private; accessible only within the defining class.
 		ACC_PROTECTED		= 0x0004,	//Declared protected; may be accessed within subclasses.
@@ -147,12 +147,23 @@ namespace method_namespace {
 		ACC_SYNTHETIC		= 0x1000,	//Declared synthetic; not present in the source code.
 	};
 
-	std::string method_access_flags_tt[] = {
+	std::string flags_tt[] = {
 		"ACC_PUBLIC","ACC_PRIVATE","ACC_PROTECTED","ACC_STATIC",
 		"ACC_FINAL","ACC_SYNCHRONIZED","ACC_BRIDGE","ACC_VARARGS",
 		"ACC_NATIVE","","ACC_ABSTRACT","ACC_STRICT",
 		"ACC_SYNTHETIC","","",""
 	};
+}
+
+void print_access_flags(const unsigned int & u2_access_flags, const std::string (&flags_tt)[16]){
+	if(u2_access_flags) printf("\t");
+	for(int i = 0, first_set = 0; i < 16; i++){
+		if(u2_access_flags & 1<<i){
+			if(first_set) printf(", "); else ++first_set;
+			printf("%s", flags_tt[i].c_str());
+		}
+	}
+	printf("\n");
 }
 
 byte getHexValue(const std::string & hex_byte){
