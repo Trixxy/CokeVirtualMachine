@@ -155,6 +155,30 @@ namespace MethodAccess {
 	};
 }
 
+// std::map<std::string, unsigned int> attribute_map;
+
+
+// ConstantValue
+// Code
+// StackMapTable
+// Exceptions
+// InnerClasses
+// EnclosingMethod
+// Synthetic
+// Signature
+// SourceFile
+// SourceDebugExtension
+// LineNumberTable
+// LocalVariableTable
+// LocalVariableTypeTable
+// Deprecated
+// RuntimeVisibleAnnotations
+// RuntimeInvisibleAnnotations
+// RuntimeVisibleParameterAnnotations
+// RuntimeInvisibleParameterAnnotations
+// AnnotationDefault
+// BootstrapMethods
+
 void print_access_flags(const unsigned int & u2_access_flags, const std::string (&flags_tt)[16]){
 	if(u2_access_flags) printf("(");
 	for(int i = 0, first_set = 0; i < 16; i++){

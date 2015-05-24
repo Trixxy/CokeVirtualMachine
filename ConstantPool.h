@@ -2,13 +2,13 @@
 #define _VM_CONSTANT_POOL_H_
 
 #include <sstream>
+#include <functional>
 #include "DefConstTrans.h"
-#include "CodeHandler.h"
 #include "ConstantPoolElement.h"
 
 class ConstantPool{
 	std::vector<ConstantPoolElement*> elem;
-	CodeHandler * coke;
+	std::function<unsigned int(ClassUnit)> fh_fetch;
 
 	void lookup(unsigned int i, std::stringstream & str){
 		--i;
@@ -62,27 +62,27 @@ class ConstantPool{
 
 public:
 	ConstantPool(){}
-	ConstantPool(CodeHandler * _coke):elem(std::vector<ConstantPoolElement*>()), coke(_coke){}
+	ConstantPool(std::function<unsigned int(ClassUnit)> fetch):elem(std::vector<ConstantPoolElement*>()), fh_fetch(fetch){}
 	~ConstantPool(){
 		for(int i = 0; i < elem.size(); i++) delete elem[i];
 	}
 
 	void push_back(const unsigned int & tag){
 		switch(tag){
-			case CONSTANT_Class: elem.push_back(new cp_Class(*coke)); break;
-			case CONSTANT_Fieldref: elem.push_back(new cp_Fieldref(*coke)); break;
-			case CONSTANT_Methodref: elem.push_back(new cp_Methodref(*coke)); break;
-			case CONSTANT_InterfaceMethodref: elem.push_back(new cp_InterfaceMethodref(*coke)); break;
-			case CONSTANT_String: elem.push_back(new cp_String(*coke)); break;
-			case CONSTANT_Integer: elem.push_back(new cp_Integer(*coke)); break;
-			case CONSTANT_Float: elem.push_back(new cp_Float(*coke)); break;
-			case CONSTANT_Long: elem.push_back(new cp_Long(*coke)); break;
-			case CONSTANT_Double: elem.push_back(new cp_Double(*coke)); break;
-			case CONSTANT_NameAndType: elem.push_back(new cp_NameAndType(*coke)); break;
-			case CONSTANT_Utf8: elem.push_back(new cp_Utf8(*coke)); break;
-			case CONSTANT_MethodHandle: elem.push_back(new cp_MethodHandle(*coke)); break;
-			case CONSTANT_MethodType: elem.push_back(new cp_MethodType(*coke)); break;
-			case CONSTANT_InvokeDynamic: elem.push_back(new cp_InvokeDynamic(*coke)); break;	
+			case CONSTANT_Class: elem.push_back(new cp_Class(fh_fetch)); break;
+			case CONSTANT_Fieldref: elem.push_back(new cp_Fieldref(fh_fetch)); break;
+			case CONSTANT_Methodref: elem.push_back(new cp_Methodref(fh_fetch)); break;
+			case CONSTANT_InterfaceMethodref: elem.push_back(new cp_InterfaceMethodref(fh_fetch)); break;
+			case CONSTANT_String: elem.push_back(new cp_String(fh_fetch)); break;
+			case CONSTANT_Integer: elem.push_back(new cp_Integer(fh_fetch)); break;
+			case CONSTANT_Float: elem.push_back(new cp_Float(fh_fetch)); break;
+			case CONSTANT_Long: elem.push_back(new cp_Long(fh_fetch)); break;
+			case CONSTANT_Double: elem.push_back(new cp_Double(fh_fetch)); break;
+			case CONSTANT_NameAndType: elem.push_back(new cp_NameAndType(fh_fetch)); break;
+			case CONSTANT_Utf8: elem.push_back(new cp_Utf8(fh_fetch)); break;
+			case CONSTANT_MethodHandle: elem.push_back(new cp_MethodHandle(fh_fetch)); break;
+			case CONSTANT_MethodType: elem.push_back(new cp_MethodType(fh_fetch)); break;
+			case CONSTANT_InvokeDynamic: elem.push_back(new cp_InvokeDynamic(fh_fetch)); break;	
 			default: std::cerr << "Unrecognized constant pool tag.\n";
 		}
 	}
@@ -109,7 +109,7 @@ public:
 			
 			get_cpe(i)->print();
 			if(get_cpe(i)->get_tag() != CONSTANT_Utf8) printf(" // ");
-			lookup(i);
+			printf("%s", lookup(i).c_str());
 			
 			printf("\n");
 		}

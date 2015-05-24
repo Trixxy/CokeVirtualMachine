@@ -1,6 +1,6 @@
 public class Test {
 	private int var1;
-	private int var2 = 3;
+	private final int var2 = 3;
 
 	public void foo1(){}
 	public void foo2(){}

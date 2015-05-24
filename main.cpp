@@ -8,7 +8,7 @@
 #include <deque>
 #include <cassert>
 #include "ClassFile.h"
-#include "CodeHandler.h"
+#include "FileHandler.h"
 // #include "DefConstTrans.h"
 // #include "ConstantPool.h"
 
@@ -33,7 +33,7 @@ int main(int argc, char **argv){
 	cf.print();
 
 	// println(cf.get_code_handler());
-	assert(cf.get_code_handler().size() == cf.get_code_handler().get_cc());
+	assert(cf.get_fh().size() == cf.get_fh().get_cc());
 
 	// for(int i = 0; i < program.size(); i++){
 	// 	std::cout << "[" << std::setfill ('0') << std::setw(4) << std::dec << i << "]: " 

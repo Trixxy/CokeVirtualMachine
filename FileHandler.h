@@ -6,13 +6,13 @@
 #include <vector>
 #include <cstdio>
 
-class CodeHandler{
+class FileHandler{
 	std::vector<byte> code;
 	unsigned int cc; //code counter
 
 public:
-	CodeHandler():code(std::vector<byte>()), cc(0){}
-	CodeHandler(const std::string & file_path):code(std::vector<byte>()), cc(0){
+	FileHandler():code(std::vector<byte>()), cc(0){}
+	FileHandler(const std::string & file_path):code(std::vector<byte>()), cc(0){
 		feed_from_file(file_path);
 	}
 
