@@ -1,1 +1,1 @@
-g++ *.cpp -o vm
+g++ -std=gnu++0x *.cpp -o vm

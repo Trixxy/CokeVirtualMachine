@@ -156,13 +156,14 @@ namespace MethodAccess {
 }
 
 void print_access_flags(const unsigned int & u2_access_flags, const std::string (&flags_tt)[16]){
-	if(u2_access_flags) printf("\t");
+	if(u2_access_flags) printf("(");
 	for(int i = 0, first_set = 0; i < 16; i++){
 		if(u2_access_flags & 1<<i){
 			if(first_set) printf(", "); else ++first_set;
 			printf("%s", flags_tt[i].c_str());
 		}
 	}
+	if(u2_access_flags) printf(")");
 	printf("\n");
 }
 

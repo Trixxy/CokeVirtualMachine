@@ -1,6 +1,8 @@
 #ifndef _VM_ATTRIBUTE_INFO_H_
 #define _VM_ATTRIBUTE_INFO_H_
 
+#include <string>
+#include <functional>
 #include "CodeHandler.h"
 
 class AttributeInfo{
@@ -14,15 +16,8 @@ public:
 		for(int i = 0; i < u4_attribute_length; i++) u1_info_array.push_back(coke.fetch(U1));
 	}
 
-	void print() {
-		// 	  u2 attribute_name_index;
-	//	coke.fetch(U2);
-// 	  u4 attribute_length;
-	//	int attrlen = coke.fetch(U4);
-// 	  u1 info[attribute_length];
-	//	for(int m = 0; m < attrlen; m++) {
-	//		coke.fetch(U1);
-	//	}
+	void print(std::function<std::string(int)> lookup) {
+		printf("attribute_name_index: #%u // %s\n", u2_attribute_name_index, lookup(u2_attribute_name_index).c_str());	
 	}
 };
 

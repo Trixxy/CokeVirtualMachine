@@ -9,6 +9,57 @@
 class ConstantPool{
 	std::vector<ConstantPoolElement*> elem;
 	CodeHandler * coke;
+
+	void lookup(unsigned int i, std::stringstream & str){
+		--i;
+		switch(elem[i]->get_tag()){
+			case CONSTANT_Class: 
+				lookup(((cp_Class *)elem[i])->u2_name_index, str);
+				break;
+			case CONSTANT_Fieldref: 
+				lookup(((cp_Fieldref *)elem[i])->u2_class_index, str);
+				str << ".";
+				lookup(((cp_Fieldref *)elem[i])->u2_name_and_type_index, str);
+				break;
+			case CONSTANT_Methodref: 
+				lookup(((cp_Methodref *)elem[i])->u2_class_index, str);
+				str << ".";
+				lookup(((cp_Methodref *)elem[i])->u2_name_and_type_index, str);
+				break;
+			case CONSTANT_InterfaceMethodref: 
+				lookup(((cp_InterfaceMethodref *)elem[i])->u2_class_index, str);
+				str << "??";
+				lookup(((cp_InterfaceMethodref *)elem[i])->u2_name_and_type_index, str);
+				break;
+			case CONSTANT_String: 
+				lookup(((cp_String *)elem[i])->u2_string_index, str);
+				break;
+			case CONSTANT_Integer: 
+				break;
+			case CONSTANT_Float: 
+				break;
+			case CONSTANT_Long: 
+				break;
+			case CONSTANT_Double: 
+				break;
+			case CONSTANT_NameAndType: 
+				lookup(((cp_NameAndType *)elem[i])->u2_name_index, str);
+				str << ":";
+				lookup(((cp_NameAndType *)elem[i])->u2_descriptor_index, str);
+				break;
+			case CONSTANT_Utf8: 
+				str << ((cp_Utf8 *)elem[i])->u1_bytes_array;
+				break;
+			case CONSTANT_MethodHandle: 
+				break;
+			case CONSTANT_MethodType: 
+				break;
+			case CONSTANT_InvokeDynamic: 
+				break;	
+			default: std::cerr << "Unrecognized constant pool tag.\n";
+		}
+	}
+
 public:
 	ConstantPool(){}
 	ConstantPool(CodeHandler * _coke):elem(std::vector<ConstantPoolElement*>()), coke(_coke){}
@@ -36,53 +87,16 @@ public:
 		}
 	}
 
-	void lookup(const unsigned int & i){
-		switch(elem[i]->get_tag()){
-			case CONSTANT_Class: 
-				lookup(((cp_Class *)elem[i])->u2_name_index-1);
-				break;
-			case CONSTANT_Fieldref: 
-				lookup(((cp_Fieldref *)elem[i])->u2_class_index-1);
-				printf(".");
-				lookup(((cp_Fieldref *)elem[i])->u2_name_and_type_index-1);
-				break;
-			case CONSTANT_Methodref: 
-				lookup(((cp_Methodref *)elem[i])->u2_class_index-1);
-				printf(".");
-				lookup(((cp_Methodref *)elem[i])->u2_name_and_type_index-1);
-				break;
-			case CONSTANT_InterfaceMethodref: 
-				lookup(((cp_InterfaceMethodref *)elem[i])->u2_class_index-1);
-				printf("??");
-				lookup(((cp_InterfaceMethodref *)elem[i])->u2_name_and_type_index-1);
-				break;
-			case CONSTANT_String: 
-				lookup(((cp_String *)elem[i])->u2_string_index-1);
-				break;
-			case CONSTANT_Integer: 
-				break;
-			case CONSTANT_Float: 
-				break;
-			case CONSTANT_Long: 
-				break;
-			case CONSTANT_Double: 
-				break;
-			case CONSTANT_NameAndType: 
-				lookup(((cp_NameAndType *)elem[i])->u2_name_index-1);
-				printf(":");
-				lookup(((cp_NameAndType *)elem[i])->u2_descriptor_index-1);
-				break;
-			case CONSTANT_Utf8: 
-				printf("%s", ((cp_Utf8 *)elem[i])->u1_bytes_array.c_str());
-				break;
-			case CONSTANT_MethodHandle: 
-				break;
-			case CONSTANT_MethodType: 
-				break;
-			case CONSTANT_InvokeDynamic: 
-				break;	
-			default: std::cerr << "Unrecognized constant pool tag.\n";
-		}
+
+	std::string lookup(const unsigned int & i){
+		std::stringstream str;
+		lookup(i, str);
+		return str.str();
+	}
+
+
+	ConstantPoolElement * get_cpe(const unsigned int & i){
+		return elem[i-1];
 	}
 
 	void print(){
@@ -91,8 +105,12 @@ public:
 			else if(i<100)  printf("  ");
 			else if(i<1000) printf(" ");
 			printf("#%u = %-20s", i, constant_types_tt[elem[i-1]->get_tag()].c_str());
-			//elem[i-1]->print();
-			lookup(i-1);
+			
+			
+			get_cpe(i)->print();
+			if(get_cpe(i)->get_tag() != CONSTANT_Utf8) printf(" // ");
+			lookup(i);
+			
 			printf("\n");
 		}
 	}

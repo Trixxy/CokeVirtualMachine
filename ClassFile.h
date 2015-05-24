@@ -77,29 +77,40 @@ public:
 		//constant pool
 		const_pool.print();
 		
-		printf("Class access flags: 0x%04x\n", u2_access_flags);
+		printf("Class access flags: 0x%04x ", u2_access_flags);
 		print_access_flags(u2_access_flags, ClassAccess::flags_tt);
 
-	 	printf("This class: %u\n", u2_this_class);
-		printf("Super class: %u\n", u2_super_class);
+	 	printf("This class: #%u // %s\n", u2_this_class, const_pool.lookup(u2_this_class).c_str());
+		printf("Super class: #%u // %s\n", u2_super_class, const_pool.lookup(u2_super_class).c_str());
 		printf("interfaces count: %lu\n", u2_interfaces_array.size());
 		for(int j = 0; j < u2_interfaces_array.size(); j++) {
 			printf("%u\n", u2_interfaces_array[j]);
 		}
 
-		printf("fields count: %lu\n", field_info_array.size());
+		printf("\n");
+		
+		auto lu = [&](unsigned int x){ return const_pool.lookup(x); };
+
+		printf("fields count: %lu\n\n", field_info_array.size());
 		for(int j = 0; j < field_info_array.size(); j++){
-			printf("--- Start of field %d:\n", j);	
-			field_info_array[j].print();
-			printf("--- End of field %d:\n", j);	
+			field_info_array[j].print(lu);
+			printf("\n");
 		}
-		printf("methods count: %lu\n", method_info_array.size());
+
+		printf("\n");
+		
+		printf("methods count: %lu\n\n", method_info_array.size());
 		for(int j = 0; j < method_info_array.size(); j++){
-			method_info_array[j].print();
+			method_info_array[j].print(lu);
+			printf("\n");
 		}
-		printf("attributes count: %lu\n", attribute_info_array.size());
+		
+		printf("\n");
+
+		printf("attributes count: %lu\n\n", attribute_info_array.size());
 		for(int j = 0; j < attribute_info_array.size(); j++){
-			attribute_info_array[j].print();
+			attribute_info_array[j].print(lu);
+			printf("\n");
 		}
 	}
 

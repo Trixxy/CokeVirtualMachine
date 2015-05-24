@@ -18,7 +18,8 @@ struct cp_Class: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){		
-		printf("#%u //u2_name_index", u2_name_index);
+		printf("#%u", u2_name_index);
+//		printf(" //u2_name_index");
 	};
 };
 struct cp_Fieldref: public ConstantPoolElement {
@@ -29,7 +30,8 @@ struct cp_Fieldref: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){		
-		printf("#%u.#%u //class_index.name_and_type_index", u2_class_index, u2_name_and_type_index);
+		printf("#%u.#%u", u2_class_index, u2_name_and_type_index);
+//		printf(" //class_index.name_and_type_index");
 	};
 };
 struct cp_Methodref: public ConstantPoolElement {
@@ -40,7 +42,8 @@ struct cp_Methodref: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){		
-		printf("#%u.#%u //class_index.name_and_type_index", u2_class_index, u2_name_and_type_index);
+		printf("#%u.#%u", u2_class_index, u2_name_and_type_index);
+//		printf(" //class_index.name_and_type_index");
 	};
 };
 struct cp_InterfaceMethodref: public ConstantPoolElement {
@@ -52,7 +55,7 @@ struct cp_InterfaceMethodref: public ConstantPoolElement {
 
 	virtual void print(){		
 		printf("#%u, #%u", u2_class_index, u2_name_and_type_index);
-		printf(" //TOTO(class_index, name_and_type_index)");
+//		printf(" //TOTO(class_index, name_and_type_index)");
 	};
 };
 struct cp_String: public ConstantPoolElement {
@@ -62,7 +65,8 @@ struct cp_String: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){		
-		printf("#%u //string_index", u2_string_index);
+		printf("#%u", u2_string_index);
+//		printf(" //string_index");
 	};
 };
 struct cp_Integer: public ConstantPoolElement {
@@ -72,7 +76,8 @@ struct cp_Integer: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("%u //bytes", u4_bytes);
+		printf("%u", u4_bytes);
+//		printf(" //bytes", u4_bytes);
 	};
 };
 struct cp_Float: public ConstantPoolElement {
@@ -82,7 +87,8 @@ struct cp_Float: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("%u //bytes", u4_bytes);
+		printf("%u", u4_bytes);
+//		printf(" //bytes");
 	};
 };
 struct cp_Long: public ConstantPoolElement {
@@ -93,7 +99,8 @@ struct cp_Long: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("%u<<32|%u //high_bytes, low_bytes", u4_high_bytes, u4_low_bytes);
+		printf("%u<<32|%u", u4_high_bytes, u4_low_bytes);
+//		printf(" //high_bytes, low_bytes");
 	};
 };
 struct cp_Double: public ConstantPoolElement {
@@ -104,7 +111,8 @@ struct cp_Double: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("%u<<32|%u //high_bytes, low_bytes", u4_high_bytes, u4_low_bytes);
+		printf("%u<<32|%u", u4_high_bytes, u4_low_bytes);
+//		printf(" //high_bytes, low_bytes");
 	};
 };
 struct cp_NameAndType: public ConstantPoolElement {
@@ -115,7 +123,8 @@ struct cp_NameAndType: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("#%u:#%u //name_index, descriptor_index", u2_name_index, u2_descriptor_index);
+		printf("#%u:#%u", u2_name_index, u2_descriptor_index);
+//		printf(" //name_index, descriptor_index");
 	};
 };
 struct cp_Utf8: public ConstantPoolElement {
@@ -131,7 +140,7 @@ struct cp_Utf8: public ConstantPoolElement {
 	virtual unsigned int get_tag(){ return tag; };
 
 	virtual void print(){
-		printf("\"%s\"", u1_bytes_array.c_str());
+//		printf("\"%s\"", u1_bytes_array.c_str());
 	};
 };
 struct cp_MethodHandle: public ConstantPoolElement {
@@ -143,7 +152,7 @@ struct cp_MethodHandle: public ConstantPoolElement {
 
 	virtual void print(){
 		printf("%u, #%u", u1_reference_kind, u2_reference_index);
-		printf(" //TOTO(reference_kind, reference_index)");
+//		printf(" //TOTO(reference_kind, reference_index)");
 	};
 };
 struct cp_MethodType: public ConstantPoolElement {
@@ -154,7 +163,7 @@ struct cp_MethodType: public ConstantPoolElement {
 
 	virtual void print(){		
 		printf("#%u", u2_descriptor_index);
-		printf(" //TOTO(descriptor_index)");
+//		printf(" //TOTO(descriptor_index)");
 	};
 };
 struct cp_InvokeDynamic: public ConstantPoolElement {
@@ -166,7 +175,7 @@ struct cp_InvokeDynamic: public ConstantPoolElement {
 
 	virtual void print(){		
 		printf("#%u, #%u", u2_bootstrap_method_attr_index, u2_name_and_type_index);
-		printf(" //TOTO(bootstrap_method_attr_index, name_and_type_index)");
+//		printf(" //TOTO(bootstrap_method_attr_index, name_and_type_index)");
 	};
 };
 
