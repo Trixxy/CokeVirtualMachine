@@ -5,24 +5,24 @@
 #include "DefConstTrans.h"
 
 class ProgramCode{
-	std::vector<unsigned int> code = {
-		vm_iconst_1,
-		vm_iconst_2,
-		vm_iadd,
-		vm_ldc,
-		100
-	};
+    std::vector<unsigned int> code = {
+        vm_iconst_2,
+        vm_iconst_4,
+        vm_imul
+        //vm_ldc,
+        //100
+    };
 
 public:
-	unsigned int pc;
-	ProgramCode():pc(0){}
+    unsigned int pc;
+    ProgramCode():pc(0){}
 
-	byte next_inst(){
-		return code[pc++];
-	}
-	bool has_next(){
-		return !(pc == code.size());
-	}
+    byte next_inst(){
+        return code[pc++];
+    }
+    bool has_next(){
+        return (pc != code.size());
+    }
 };
 
 #endif 
