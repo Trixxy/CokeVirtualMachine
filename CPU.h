@@ -56,8 +56,8 @@ private:
     inline void vm_dconst_0(){/* TO BE IMPLEMENTED */}
     inline void vm_dconst_1(){/* TO BE IMPLEMENTED */}
     inline void vm_bipush(){
-        unsigned int byte = pc->get_u1();
-        stack.push(byte);        
+        unsigned int b = pc->get_u1();
+        stack.push(b);        
     }
     inline void vm_sipush(){/* TO BE IMPLEMENTED */}
     inline void vm_ldc(){
