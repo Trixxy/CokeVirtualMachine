@@ -14,13 +14,12 @@ public:
     CPU():stack(FramedStack()){ link_exec_map(); }
     void run(ProgramCode * _pc){
         pc = _pc;
-        stack.push_frame(1);
+        stack.push_frame(2);
             
         while(pc->has_next()){
             (this->*exec_map[pc->next_inst()])();
         }
-        printf("after add: %u\n", stack.pop());
-
+        printf("Final result: %u\n", stack.pop());
 
         stack.pop_frame();
     }
@@ -56,22 +55,37 @@ private:
     inline void vm_fconst_2(){/* TO BE IMPLEMENTED */}
     inline void vm_dconst_0(){/* TO BE IMPLEMENTED */}
     inline void vm_dconst_1(){/* TO BE IMPLEMENTED */}
-    inline void vm_bipush(){/* TO BE IMPLEMENTED */}
+    inline void vm_bipush(){
+        unsigned int byte = pc->get_u1();
+        stack.push(byte);        
+    }
     inline void vm_sipush(){/* TO BE IMPLEMENTED */}
     inline void vm_ldc(){
-        
+        unsigned int val = pc->get_u4();
+        stack.push(val);
     }
     inline void vm_ldc_w(){/* TO BE IMPLEMENTED */}
     inline void vm_ldc2_w(){/* TO BE IMPLEMENTED */}
-    inline void vm_iload(){/* TO BE IMPLEMENTED */}
+    inline void vm_iload(){
+        unsigned int index = stack.pop();
+        stack.push(stack[index]);
+    }
     inline void vm_lload(){/* TO BE IMPLEMENTED */}
     inline void vm_fload(){/* TO BE IMPLEMENTED */}
     inline void vm_dload(){/* TO BE IMPLEMENTED */}
     inline void vm_aload(){/* TO BE IMPLEMENTED */}
-    inline void vm_iload_0(){/* TO BE IMPLEMENTED */}
-    inline void vm_iload_1(){/* TO BE IMPLEMENTED */}
-    inline void vm_iload_2(){/* TO BE IMPLEMENTED */}
-    inline void vm_iload_3(){/* TO BE IMPLEMENTED */}
+    inline void vm_iload_0(){
+        stack.push(stack[0]);
+    }
+    inline void vm_iload_1(){
+        stack.push(stack[1]);
+    }
+    inline void vm_iload_2(){
+        stack.push(stack[2]);
+    }
+    inline void vm_iload_3(){
+        stack.push(stack[3]);
+    }
     inline void vm_lload_0(){/* TO BE IMPLEMENTED */}
     inline void vm_lload_1(){/* TO BE IMPLEMENTED */}
     inline void vm_lload_2(){/* TO BE IMPLEMENTED */}
@@ -96,15 +110,31 @@ private:
     inline void vm_baload(){/* TO BE IMPLEMENTED */}
     inline void vm_caload(){/* TO BE IMPLEMENTED */}
     inline void vm_saload(){/* TO BE IMPLEMENTED */}
-    inline void vm_istore(){/* TO BE IMPLEMENTED */}
+    inline void vm_istore(){
+        unsigned int index = stack.pop();
+        unsigned int val = stack.pop();
+        stack[index] = val;
+    }
     inline void vm_lstore(){/* TO BE IMPLEMENTED */}
     inline void vm_fstore(){/* TO BE IMPLEMENTED */}
     inline void vm_dstore(){/* TO BE IMPLEMENTED */}
     inline void vm_astore(){/* TO BE IMPLEMENTED */}
-    inline void vm_istore_0(){/* TO BE IMPLEMENTED */}
-    inline void vm_istore_1(){/* TO BE IMPLEMENTED */}
-    inline void vm_istore_2(){/* TO BE IMPLEMENTED */}
-    inline void vm_istore_3(){/* TO BE IMPLEMENTED */}
+    inline void vm_istore_0(){
+        unsigned int val = stack.pop();
+        stack[0] = val;
+    }
+    inline void vm_istore_1(){
+        unsigned int val = stack.pop();
+        stack[1] = val;
+    }
+    inline void vm_istore_2(){
+        unsigned int val = stack.pop();
+        stack[2] = val;
+    }
+    inline void vm_istore_3(){
+        unsigned int val = stack.pop();
+        stack[3] = val;
+    }
     inline void vm_lstore_0(){/* TO BE IMPLEMENTED */}
     inline void vm_lstore_1(){/* TO BE IMPLEMENTED */}
     inline void vm_lstore_2(){/* TO BE IMPLEMENTED */}
@@ -129,7 +159,9 @@ private:
     inline void vm_bastore(){/* TO BE IMPLEMENTED */}
     inline void vm_castore(){/* TO BE IMPLEMENTED */}
     inline void vm_sastore(){/* TO BE IMPLEMENTED */}
-    inline void vm_pop(){/* TO BE IMPLEMENTED */}
+    inline void vm_pop(){
+        stack.pop();
+    }
     inline void vm_pop2(){/* TO BE IMPLEMENTED */}
     inline void vm_dup(){/* TO BE IMPLEMENTED */}
     inline void vm_dup_x1(){/* TO BE IMPLEMENTED */}
