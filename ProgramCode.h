@@ -6,17 +6,12 @@
 
 class ProgramCode{
     std::vector<unsigned int> code = {
+        vm_iconst_0,
+        vm_ifeq,
+        0x00,
+        0x02,
+        vm_iconst_1,
         vm_iconst_2,
-        vm_istore_1,
-        vm_ldc,
-        0x00,
-        0x00,
-        0x01,
-        0x90,
-        vm_iconst_3,
-        vm_istore,
-        vm_iload_3,
-        vm_iload_1,
         vm_iadd
     };
 
@@ -57,6 +52,10 @@ public:
             res = res << 8 | get_u1();
         }
         return res;
+    }
+
+    void jump(int offset) {
+        pc += offset; /* TODO: Double check */
     }
 };
 

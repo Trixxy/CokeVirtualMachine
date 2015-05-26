@@ -25,7 +25,7 @@ public:
     }
 
 private:
-    inline void vm_nop(){/* TO BE IMPLEMENTED */}
+    inline void vm_nop(){}
     inline void vm_aconst_null(){/* TO BE IMPLEMENTED */}
     inline void vm_iconst_m1(){
         stack.push(-1);
@@ -171,9 +171,9 @@ private:
     inline void vm_dup2_x2(){/* TO BE IMPLEMENTED */}
     inline void vm_swap(){/* TO BE IMPLEMENTED */}
     inline void vm_iadd(){
-        int val1 = (int) stack.pop();
-        int val2 = (int) stack.pop();
-        int res = val1 + val2;
+        auto val1 = stack.pop();
+        auto val2 = stack.pop();
+        auto res = val1 + val2;
         stack.push(res);
     }
     inline void vm_ladd(){/* TO BE IMPLEMENTED */}
@@ -247,21 +247,50 @@ private:
     inline void vm_fcmpg(){/* TO BE IMPLEMENTED */}
     inline void vm_dcmpl(){/* TO BE IMPLEMENTED */}
     inline void vm_dcmpg(){/* TO BE IMPLEMENTED */}
-    inline void vm_ifeq(){/* TO BE IMPLEMENTED */}
-    inline void vm_ifne(){/* TO BE IMPLEMENTED */}
+    inline void vm_ifeq(){
+        unsigned int val = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val == 0) {
+            pc->jump((short)offset);
+        }
+    }
+    inline void vm_ifne(){
+        unsigned int val = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val != 0) {
+            pc->jump((short)offset);
+        }
+    }
     inline void vm_iflt(){/* TO BE IMPLEMENTED */}
     inline void vm_ifge(){/* TO BE IMPLEMENTED */}
     inline void vm_ifgt(){/* TO BE IMPLEMENTED */}
     inline void vm_ifle(){/* TO BE IMPLEMENTED */}
-    inline void vm_if_icmpeq(){/* TO BE IMPLEMENTED */}
+    inline void vm_if_icmpeq(){
+        unsigned int val1 = stack.pop();
+        unsigned int val2 = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val1 == val2) {
+            pc->jump((short)offset);
+        }
+    }
     inline void vm_if_icmpne(){/* TO BE IMPLEMENTED */}
-    inline void vm_if_icmplt(){/* TO BE IMPLEMENTED */}
+    inline void vm_if_icmplt(){
+        unsigned int val1 = stack.pop();
+        unsigned int val2 = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val1 < val2) {
+            pc->jump((short)offset);
+        }
+    }
     inline void vm_if_icmpge(){/* TO BE IMPLEMENTED */}
     inline void vm_if_icmpgt(){/* TO BE IMPLEMENTED */}
     inline void vm_if_icmple(){/* TO BE IMPLEMENTED */}
     inline void vm_if_acmpeq(){/* TO BE IMPLEMENTED */}
     inline void vm_if_acmpne(){/* TO BE IMPLEMENTED */}
-    inline void vm_goto(){/* TO BE IMPLEMENTED */}
+    inline void vm_goto(){
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        pc->jump((short)offset);
+    }
     inline void vm_jsr(){/* TO BE IMPLEMENTED */}
     inline void vm_ret(){/* TO BE IMPLEMENTED */}
     inline void vm_tableswitch(){/* TO BE IMPLEMENTED */}
@@ -294,7 +323,10 @@ private:
     inline void vm_multianewarray(){/* TO BE IMPLEMENTED */}
     inline void vm_ifnull(){/* TO BE IMPLEMENTED */}
     inline void vm_ifnonnull(){/* TO BE IMPLEMENTED */}
-    inline void vm_goto_w(){/* TO BE IMPLEMENTED */}
+    inline void vm_goto_w(){
+        unsigned int offset = pc->get_u4()-4; //-2 for the offset bytes we just read
+        pc->jump(offset);
+    }
     inline void vm_jsr_w(){/* TO BE IMPLEMENTED */}
     inline void vm_breakpoint(){/* TO BE IMPLEMENTED */}
     inline void vm_impdep1(){/* TO BE IMPLEMENTED */}
