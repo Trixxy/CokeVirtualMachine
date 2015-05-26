@@ -32,5 +32,9 @@
 *.x86_64
 *.hex
 
+#Testfiles
+*Test.java
+*Test.class
+
 # Debug files
 *.dSYM/
