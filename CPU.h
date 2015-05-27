@@ -67,13 +67,15 @@ private:
     inline void vm_ldc_w(){/* TO BE IMPLEMENTED */}
     inline void vm_ldc2_w(){/* TO BE IMPLEMENTED */}
     inline void vm_iload(){
-        unsigned int index = stack.pop();
+        unsigned int index = pc->get_u1();
         stack.push(stack[index]);
     }
     inline void vm_lload(){/* TO BE IMPLEMENTED */}
     inline void vm_fload(){/* TO BE IMPLEMENTED */}
     inline void vm_dload(){/* TO BE IMPLEMENTED */}
-    inline void vm_aload(){/* TO BE IMPLEMENTED */}
+    inline void vm_aload(){
+        vm_iload(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
     inline void vm_iload_0(){
         stack.push(stack[0]);
     }
@@ -98,10 +100,18 @@ private:
     inline void vm_dload_1(){/* TO BE IMPLEMENTED */}
     inline void vm_dload_2(){/* TO BE IMPLEMENTED */}
     inline void vm_dload_3(){/* TO BE IMPLEMENTED */}
-    inline void vm_aload_0(){/* TO BE IMPLEMENTED */}
-    inline void vm_aload_1(){/* TO BE IMPLEMENTED */}
-    inline void vm_aload_2(){/* TO BE IMPLEMENTED */}
-    inline void vm_aload_3(){/* TO BE IMPLEMENTED */}
+    inline void vm_aload_0(){
+        vm_iload_0(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
+    inline void vm_aload_1(){
+        vm_iload_1(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
+    inline void vm_aload_2(){
+        vm_iload_2(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
+    inline void vm_aload_3(){
+        vm_iload_3(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
     inline void vm_iaload(){/* TO BE IMPLEMENTED */}
     inline void vm_laload(){/* TO BE IMPLEMENTED */}
     inline void vm_faload(){/* TO BE IMPLEMENTED */}
@@ -111,14 +121,16 @@ private:
     inline void vm_caload(){/* TO BE IMPLEMENTED */}
     inline void vm_saload(){/* TO BE IMPLEMENTED */}
     inline void vm_istore(){
-        unsigned int index = stack.pop();
+        unsigned int index = pc->get_u1();
         unsigned int val = stack.pop();
         stack[index] = val;
     }
     inline void vm_lstore(){/* TO BE IMPLEMENTED */}
     inline void vm_fstore(){/* TO BE IMPLEMENTED */}
     inline void vm_dstore(){/* TO BE IMPLEMENTED */}
-    inline void vm_astore(){/* TO BE IMPLEMENTED */}
+    inline void vm_astore(){
+        vm_istore(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
     inline void vm_istore_0(){
         unsigned int val = stack.pop();
         stack[0] = val;
@@ -147,10 +159,18 @@ private:
     inline void vm_dstore_1(){/* TO BE IMPLEMENTED */}
     inline void vm_dstore_2(){/* TO BE IMPLEMENTED */}
     inline void vm_dstore_3(){/* TO BE IMPLEMENTED */}
-    inline void vm_astore_0(){/* TO BE IMPLEMENTED */}
-    inline void vm_astore_1(){/* TO BE IMPLEMENTED */}
-    inline void vm_astore_2(){/* TO BE IMPLEMENTED */}
-    inline void vm_astore_3(){/* TO BE IMPLEMENTED */}
+    inline void vm_astore_0(){
+        vm_istore_0(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
+    inline void vm_astore_1(){
+        vm_istore_1(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
+    inline void vm_astore_2(){
+        vm_istore_2(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
+    inline void vm_astore_3(){
+        vm_istore_3(); /* Because we do type checking in the KOOL compiler, no need in the CokeVM */
+    }
     inline void vm_iastore(){/* TO BE IMPLEMENTED */}
     inline void vm_lastore(){/* TO BE IMPLEMENTED */}
     inline void vm_fastore(){/* TO BE IMPLEMENTED */}
@@ -261,10 +281,34 @@ private:
             pc->jump((short)offset);
         }
     }
-    inline void vm_iflt(){/* TO BE IMPLEMENTED */}
-    inline void vm_ifge(){/* TO BE IMPLEMENTED */}
-    inline void vm_ifgt(){/* TO BE IMPLEMENTED */}
-    inline void vm_ifle(){/* TO BE IMPLEMENTED */}
+    inline void vm_iflt(){ /* TODO: UNTESTED */
+        unsigned int val = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val < 0) {
+            pc->jump((short)offset);
+        }
+    }
+    inline void vm_ifge(){ /* TODO: UNTESTED */
+        unsigned int val = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val >= 0) {
+            pc->jump((short)offset);
+        }
+    }
+    inline void vm_ifgt(){ /* TODO: UNTESTED */
+        unsigned int val = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val > 0) {
+            pc->jump((short)offset);
+        }
+    }
+    inline void vm_ifle(){ /* TODO: UNTESTED */
+        unsigned int val = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val <= 0) {
+            pc->jump((short)offset);
+        }
+    }
     inline void vm_if_icmpeq(){
         unsigned int val1 = stack.pop();
         unsigned int val2 = stack.pop();
@@ -273,7 +317,14 @@ private:
             pc->jump((short)offset);
         }
     }
-    inline void vm_if_icmpne(){/* TO BE IMPLEMENTED */}
+    inline void vm_if_icmpne(){ /* TODO: UNTESTED */
+        unsigned int val1 = stack.pop();
+        unsigned int val2 = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val1 != val2) {
+            pc->jump((short)offset);
+        }
+    }
     inline void vm_if_icmplt(){
         unsigned int val1 = stack.pop();
         unsigned int val2 = stack.pop();
@@ -282,11 +333,46 @@ private:
             pc->jump((short)offset);
         }
     }
-    inline void vm_if_icmpge(){/* TO BE IMPLEMENTED */}
-    inline void vm_if_icmpgt(){/* TO BE IMPLEMENTED */}
-    inline void vm_if_icmple(){/* TO BE IMPLEMENTED */}
-    inline void vm_if_acmpeq(){/* TO BE IMPLEMENTED */}
-    inline void vm_if_acmpne(){/* TO BE IMPLEMENTED */}
+    inline void vm_if_icmpge(){ /* TODO: UNTESTED */
+        unsigned int val1 = stack.pop();
+        unsigned int val2 = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val1 >= val2) {
+            pc->jump((short)offset);
+        }
+    }
+    inline void vm_if_icmpgt(){ /* TODO: UNTESTED */
+        unsigned int val1 = stack.pop();
+        unsigned int val2 = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val1 > val2) {
+            pc->jump((short)offset);
+        }
+    }
+    inline void vm_if_icmple(){ /* TODO: UNTESTED */
+        unsigned int val1 = stack.pop();
+        unsigned int val2 = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val1 <= val2) {
+            pc->jump((short)offset);
+        }
+    }
+    inline void vm_if_acmpeq(){ /* TODO: UNTESTED */
+        unsigned int val1 = stack.pop();
+        unsigned int val2 = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val1 == val2) {
+            pc->jump((short)offset);
+        }
+    }
+    inline void vm_if_acmpne(){ /* TODO: UNTESTED */
+        unsigned int val1 = stack.pop();
+        unsigned int val2 = stack.pop();
+        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        if(val1 != val2) {
+            pc->jump((short)offset);
+        }
+    }
     inline void vm_goto(){
         unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
         pc->jump((short)offset);
