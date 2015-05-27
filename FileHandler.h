@@ -53,6 +53,12 @@ public:
 	void feed_from_file(const std::string & file_path){
 		byte b;
 		FILE * source_file = fopen(file_path.c_str(), "r");
+
+		if(NULL == source_file){
+			std::string err = "Error while loading '"+file_path+"'";
+			perror(err.c_str());
+		}
+
 		while(fread(&b, sizeof(byte), 1, source_file)){
 			feed(b);
 		}

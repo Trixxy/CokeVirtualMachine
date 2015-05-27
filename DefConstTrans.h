@@ -242,6 +242,54 @@ enum ClassUnit{
 	U4 = 4
 };
 
+enum AttributeTypes{
+	ATTRIBUTE_Unrecognized = 0,
+	ATTRIBUTE_ConstantValue = 1,
+	ATTRIBUTE_Code = 2,
+	ATTRIBUTE_StackMapTable = 3,
+	ATTRIBUTE_Exceptions = 4,
+	ATTRIBUTE_InnerClasses = 5,
+	ATTRIBUTE_EnclosingMethod = 6,
+	ATTRIBUTE_Synthetic = 7,
+	ATTRIBUTE_Signature = 8,
+	ATTRIBUTE_SourceFile = 9,
+	ATTRIBUTE_SourceDebugExtension = 10,
+	ATTRIBUTE_LineNumberTable = 11,
+	ATTRIBUTE_LocalVariableTable = 12,
+	ATTRIBUTE_LocalVariableTypeTable = 13,
+	ATTRIBUTE_Deprecated = 14,
+	ATTRIBUTE_RuntimeVisibleAnnotations = 15,
+	ATTRIBUTE_RuntimeInvisibleAnnotations = 16,
+	ATTRIBUTE_RuntimeVisibleParameterAnnotations = 17,
+	ATTRIBUTE_RuntimeInvisibleParameterAnnotations = 18,
+	ATTRIBUTE_AnnotationDefault = 19,
+	ATTRIBUTE_BootstrapMethods = 20
+};
+
+std::string attribute_types_tt[] = {
+	"",
+	"ConstantValue",
+	"Code",
+	"StackMapTable",
+	"Exceptions",
+	"InnerClasses",
+	"EnclosingMethod",
+	"Synthetic",
+	"Signature",
+	"SourceFile",
+	"SourceDebugExtension",
+	"LineNumberTable",
+	"LocalVariableTable",
+	"LocalVariableTypeTable",
+	"Deprecated",
+	"RuntimeVisibleAnnotations",
+	"RuntimeInvisibleAnnotations",
+	"RuntimeVisibleParameterAnnotations",
+	"RuntimeInvisibleParameterAnnotations",
+	"AnnotationDefault",
+	"BootstrapMethods"
+};
+
 enum ConstantPoolTags{
 	CONSTANT_Class = 7,
 	CONSTANT_Fieldref = 9,
@@ -259,6 +307,7 @@ enum ConstantPoolTags{
 	CONSTANT_InvokeDynamic = 18
 };
 
+
 std::string constant_types_tt[] = {
 	"",
 	"Utf8","",
@@ -275,30 +324,6 @@ std::string constant_types_tt[] = {
 	"MethodHandle",
 	"MethodType","=",
 	"InvokeDynamic"
-};
-
-
-enum ClassAttributes{
-	ConstantValue = 0,
-	Code = 1,
-	StackMapTable = 2,
-	Exceptions = 3,
-	InnerClasses = 4,
-	EnclosingMethod = 5,
-	Synthetic = 6,
-	Signature = 7,
-	SourceFile = 8,
-	SourceDebugExtension = 9,
-	LineNumberTable = 10,
-	LocalVariableTable = 11,
-	LocalVariableTypeTable = 12,
-	Deprecated = 13,
-	RuntimeVisibleAnnotations = 14,
-	RuntimeInvisibleAnnotations = 15,
-	RuntimeVisibleParameterAnnotations = 16,
-	RuntimeInvisibleParameterAnnotations = 17,
-	AnnotationDefault = 18,
-	BootstrapMethods = 19
 };
 
 namespace ClassAccess {

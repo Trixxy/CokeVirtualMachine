@@ -49,30 +49,36 @@ public:
 		const_pool = ConstantPool(fetch);
 		auto lookup = [&](unsigned int x){ return const_pool.lookup(x); };
 
+		//Read meta data
 		u4_magic = fh.fetch(U4);
 		u2_minor_version = fh.fetch(U2);
 		u2_major_version = fh.fetch(U2);
 
-
+		//Read constant pool
 		unsigned int constant_pool_count = fh.fetch(U2);
 		for(int i = 1; i < constant_pool_count; i++) const_pool.push_back(fh.fetch(U1));
 		
-		u2_access_flags = fh.fetch(U2);
-		u2_this_class = fh.fetch(U2);
-		u2_super_class = fh.fetch(U2);
+		u2_access_flags = fh.fetch(U2); //Read access flags 
+		u2_this_class = fh.fetch(U2); //Read class name (index)
+		u2_super_class = fh.fetch(U2); //Read parent class name (index)
 		
-
+		//Read interfaces
 		unsigned int interfaces_count = fh.fetch(U2);
 		for(int i = 0; i < interfaces_count; i++) u2_interfaces_array.push_back(fh.fetch(U2));
 
+		//Read fields
 		unsigned int fields_count = fh.fetch(U2);
 		for(int i = 0; i < fields_count; i++) field_info_array.push_back(FieldInfo(fetch, lookup));
 
+		//Read methods
 		unsigned int methods_count = fh.fetch(U2);
 		for(int i = 0; i < methods_count; i++) method_info_array.push_back(MethodInfo(fetch, lookup));
 
+		//Read class attributes
 		unsigned int attributes_count = fh.fetch(U2);
 		for(int i = 0; i < attributes_count; i++) attribute_info_array.push_back(AttributeInfo(fetch, lookup));
+
+		assert(fh.size() == fh.get_cc()); //Check that we actually consumed the whole file.
 	}
 
 	void print(){
@@ -88,8 +94,8 @@ public:
 		printf("Class access flags: 0x%04x ", u2_access_flags);
 		print_access_flags(u2_access_flags, ClassAccess::flags_tt);
 
-	 	printf("This class: #%u // %s\n", u2_this_class, const_pool.lookup(u2_this_class).c_str());
-		printf("Super class: #%u // %s\n", u2_super_class, const_pool.lookup(u2_super_class).c_str());
+	 	printf("This class: #%u // %s\n", u2_this_class, get_class_name().c_str());
+		printf("Super class: #%u // %s\n", u2_super_class, get_super_name().c_str());
 		printf("interfaces count: %lu\n", u2_interfaces_array.size());
 		for(int j = 0; j < u2_interfaces_array.size(); j++) {
 			printf("%u\n", u2_interfaces_array[j]);
@@ -120,33 +126,21 @@ public:
 		}
 	}
 
-	const unsigned int & get_magic() const {
-		return u4_magic;
+	void link(std::function<ClassFile*(std::string)> get_class){
+		
 	}
 
-	const unsigned int & get_minor_version() const {
-		return u2_minor_version;
-	}
+	const unsigned int & get_magic() const { return u4_magic; }
+	const unsigned int & get_minor_version() const { return u2_minor_version; }
+	const unsigned int & get_major_version() const { return u2_major_version; }
+	const unsigned int & get_access_flags() const { return u2_access_flags; }
+	const unsigned int & get_this_class() const { return u2_this_class; }
+	const unsigned int & get_super_class() const { return u2_super_class; }
 
-	const unsigned int & get_major_version() const {
-		return u2_major_version;
-	}
+	std::string get_class_name(){ return const_pool.lookup(get_this_class()); }
+	std::string get_super_name(){ return const_pool.lookup(get_super_class()); }
 
-	const unsigned int & get_access_flags() const {
-		return u2_access_flags;
-	}
-
-	const unsigned int & get_this_class() const {
-		return u2_this_class;
-	}
-
-	const unsigned int & get_super_class() const {
-		return u2_super_class;
-	}
-
-	FileHandler & get_fh(){
-		return fh;
-	}
+	FileHandler & get_fh(){ return fh; }
 };
 
 #endif

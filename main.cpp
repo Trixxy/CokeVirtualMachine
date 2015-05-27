@@ -12,20 +12,7 @@
 #include "FramedStack.h"
 #include "ProgramCode.h"
 #include "CPU.h"
-
-
-// #include "DefConstTrans.h"
-// #include "ConstantPool.h"
-
-// inline int exec(const byte & code){
-// 	if(NULL == exec_map[code]){
-// 		std::cerr << "Error: byte code [" << instruction_tt[code] << "] is not supported, yet...\n";
-// 		return -1;
-// 	}else{
-// 		exec_map[code]();
-// 		return 0;
-// 	}
-// }
+#include "RunTimeEnvironment.h"
 
 int main(int argc, char **argv){
 	if(argc <= 1){
@@ -33,15 +20,18 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	ClassFile cf = ClassFile(std::string(argv[1]));
+	RunTimeEnvironment RTE;
 
-	cf.print();
+	for(int i = 1; i < argc; i++){
+		auto current_class = new ClassFile(std::string(argv[i]));
+		current_class->print();
+		RTE.add_class(current_class);
+	}
 
-	// println(cf.get_code_handler());
-	assert(cf.get_fh().size() == cf.get_fh().get_cc());
+	RTE.link();
 
-	ProgramCode pc;
-	CPU().run(&pc);
+	// ProgramCode pc;
+	// CPU().run(&pc);
 
 	// for(int i = 0; i < program.size(); i++){
 	// 	std::cout << "[" << std::setfill ('0') << std::setw(4) << std::dec << i << "]: " 

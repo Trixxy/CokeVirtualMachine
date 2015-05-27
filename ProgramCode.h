@@ -5,19 +5,22 @@
 #include "DefConstTrans.h"
 
 class ProgramCode{
-    std::vector<unsigned int> code = {
-        vm_iconst_0,
-        vm_ifeq,
-        0x00,
-        0x02,
-        vm_iconst_1,
-        vm_iconst_2,
-        vm_iadd
-    };
+    friend class ac_Code;
+
+    unsigned int pc;
+    std::vector<unsigned int> code;
+    //  = {
+    //     vm_iconst_0,
+    //     vm_ifeq,
+    //     0x00,
+    //     0x02,
+    //     vm_iconst_1,
+    //     vm_iconst_2,
+    //     vm_iadd
+    // };
 
 public:
-    unsigned int pc;
-    ProgramCode():pc(0){}
+    ProgramCode():pc(0), code(std::vector<unsigned int>()){}
 
     byte next_inst(){
         return code[pc++];
@@ -52,6 +55,10 @@ public:
             res = res << 8 | get_u1();
         }
         return res;
+    }
+
+    const unsigned int & get_pc(){
+        return pc;
     }
 
     void jump(int offset) {
