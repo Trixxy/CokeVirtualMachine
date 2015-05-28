@@ -290,6 +290,14 @@ std::string attribute_types_tt[] = {
 	"BootstrapMethods"
 };
 
+enum KoolTypes{
+	KOOL_Int,
+	KOOL_IntArray,
+	KOOL_Bool,
+	KOOL_String,
+	KOOL_Object
+};
+
 enum ConstantPoolTags{
 	CONSTANT_Class = 7,
 	CONSTANT_Fieldref = 9,

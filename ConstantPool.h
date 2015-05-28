@@ -6,6 +6,8 @@
 #include "DefConstTrans.h"
 #include "ConstantPoolElement.h"
 
+class ClassFile; //forward declaration
+
 class ConstantPool{
 	std::vector<ConstantPoolElement*> elem;
 	std::function<unsigned int(ClassUnit)> fh_fetch;
@@ -87,6 +89,85 @@ public:
 		}
 	}
 
+	std::string get_ref_class(unsigned int i){
+		--i;
+		switch(elem[i]->get_tag()){
+			case CONSTANT_Class:
+				return get_ref_class((((cp_Class *)elem[i])->u2_name_index));
+				break;
+			case CONSTANT_Fieldref:
+				return get_ref_class(((cp_Fieldref *)elem[i])->u2_class_index);
+				break;
+			case CONSTANT_Methodref:
+				return get_ref_class(((cp_Methodref *)elem[i])->u2_class_index);
+				break;
+			case CONSTANT_InterfaceMethodref:
+				return get_ref_class(((cp_InterfaceMethodref *)elem[i])->u2_class_index);
+				break;
+			case CONSTANT_String:
+				break;
+			case CONSTANT_Integer:
+				break;
+			case CONSTANT_Float:
+				break;
+			case CONSTANT_Long:
+				break;
+			case CONSTANT_Double:
+				break;
+			case CONSTANT_NameAndType:
+				break;
+			case CONSTANT_Utf8:
+				return ((cp_Utf8 *)elem[i])->u1_bytes_array;
+				break;
+			case CONSTANT_MethodHandle:
+				break;
+			case CONSTANT_MethodType:
+				break;
+			case CONSTANT_InvokeDynamic:
+				break;
+			default: std::cerr << "Unrecognized constant pool tag.\n";
+		}
+	}
+
+	std::string get_ref_method(unsigned int i){
+		--i;
+		switch(elem[i]->get_tag()){
+			case CONSTANT_Class:
+				break;
+			case CONSTANT_Fieldref:
+				return get_ref_method(((cp_Fieldref *)elem[i])->u2_name_and_type_index);
+				break;
+			case CONSTANT_Methodref:
+				return get_ref_method(((cp_Methodref *)elem[i])->u2_name_and_type_index);
+				break;
+			case CONSTANT_InterfaceMethodref:
+				return get_ref_method(((cp_InterfaceMethodref *)elem[i])->u2_name_and_type_index);
+				break;
+			case CONSTANT_String:
+				break;
+			case CONSTANT_Integer:
+				break;
+			case CONSTANT_Float:
+				break;
+			case CONSTANT_Long:
+				break;
+			case CONSTANT_Double:
+				break;
+			case CONSTANT_NameAndType:
+				return get_ref_method(((cp_NameAndType *)elem[i])->u2_name_index);
+				break;
+			case CONSTANT_Utf8:
+				return ((cp_Utf8 *)elem[i])->u1_bytes_array;
+				break;
+			case CONSTANT_MethodHandle:
+				break;
+			case CONSTANT_MethodType:
+				break;
+			case CONSTANT_InvokeDynamic:
+				break;
+			default: std::cerr << "Unrecognized constant pool tag.\n";
+		}
+	}
 
 	std::string lookup(const unsigned int & i){
 		std::stringstream str;
@@ -97,6 +178,10 @@ public:
 
 	ConstantPoolElement * get_cpe(const unsigned int & i){
 		return elem[i-1];
+	}
+
+	void link(std::function<ClassFile*(std::string)> get_class){
+		
 	}
 
 	void print(){

@@ -6,18 +6,20 @@
 #include <map>
 #include "AttributeContainer.h"
 
+class ConstantPool;
+
 class AttributeInfo{
 	unsigned int u2_attribute_name_index;
 
 	AttributeContainer * attr_data;
-	std::function<std::string(int)> lookup;
+	ConstantPool * cp;
 
 public:
 	AttributeInfo(){}
-	AttributeInfo(std::function<unsigned int(ClassUnit)> fh_fetch, std::function<std::string(int)> lu):lookup(lu){
+	AttributeInfo(std::function<unsigned int(ClassUnit)> fh_fetch, ConstantPool * _cp):cp(_cp){
 		u2_attribute_name_index = fh_fetch(U2);
 
-		std::string attribute_type = lookup(u2_attribute_name_index);
+		std::string attribute_type = cp->lookup(u2_attribute_name_index);
 			 if("ConstantValue"							 == attribute_type){ attr_data = new ac_ConstantValue(fh_fetch); }
 		else if("Code"									 == attribute_type){ attr_data = new ac_Code(fh_fetch); }
 		else if("StackMapTable"							 == attribute_type){ attr_data = new ac_UnImplemented(fh_fetch, ATTRIBUTE_StackMapTable); }
@@ -41,6 +43,10 @@ public:
 		else 															   { attr_data = new ac_UnRecognized(fh_fetch, attribute_type); }
 	}
 
+	std::string get_attribute_name() {
+		return cp->lookup(u2_attribute_name_index);
+	}
+
 	AttributeTypes get_type(){
 		return attr_data->get_type();
 	}
@@ -50,7 +56,7 @@ public:
 	}
 
 	void print() {
-		attr_data->print();
+		 attr_data->print();
 	}
 };
 

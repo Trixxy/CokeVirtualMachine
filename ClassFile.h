@@ -3,12 +3,15 @@
 
 #include <cstdio>
 #include <string>
+#include <algorithm>
+#include <map>
 #include "DefConstTrans.h"
 #include "FileHandler.h"
 #include "ConstantPool.h"
 #include "FieldInfo.h"
 #include "MethodInfo.h"
 #include "AttributeInfo.h"
+#include "ObjectRef.h"
 
 /*
 u4             magic;
@@ -39,12 +42,20 @@ class ClassFile{
 	unsigned int u2_this_class;
 	unsigned int u2_super_class;
 	std::vector<unsigned int> u2_interfaces_array; //interfaces[interfaces_count];
-	std::vector<FieldInfo> field_info_array; //fields[fields_count];
-	std::vector<MethodInfo> method_info_array; //methods[methods_count];
-	std::vector<AttributeInfo> attribute_info_array; //attributes[attributes_count];
+	std::map<std::string, FieldInfo *> field_info_array; //fields[fields_count];
+	std::map<std::string, MethodInfo *> method_info_array; //methods[methods_count];
+	std::map<std::string, AttributeInfo *> attribute_info_array; //attributes[attributes_count];
+	std::function<unsigned int(ObjectRef *)> heap_push;
+
 public:
 	ClassFile(){}
-	ClassFile(const std::string & file_path):fh(FileHandler(file_path)), u2_interfaces_array(std::vector<unsigned int>()), field_info_array(std::vector<FieldInfo>()), method_info_array(std::vector<MethodInfo>()), attribute_info_array(std::vector<AttributeInfo>()){
+	ClassFile(const std::string & file_path):
+		fh(FileHandler(file_path)),
+		u2_interfaces_array(std::vector<unsigned int>()),
+		field_info_array(std::map<std::string, FieldInfo *>()),
+		method_info_array(std::map<std::string, MethodInfo *>()),
+		attribute_info_array(std::map<std::string, AttributeInfo *>()){
+
 		auto fetch = [&](ClassUnit U){ return fh.fetch(U); };
 		const_pool = ConstantPool(fetch);
 		auto lookup = [&](unsigned int x){ return const_pool.lookup(x); };
@@ -56,7 +67,7 @@ public:
 
 		//Read constant pool
 		unsigned int constant_pool_count = fh.fetch(U2);
-		for(int i = 1; i < constant_pool_count; i++) const_pool.push_back(fh.fetch(U1));
+		for(unsigned int i = 1; i < constant_pool_count; i++) const_pool.push_back(fh.fetch(U1));
 		
 		u2_access_flags = fh.fetch(U2); //Read access flags 
 		u2_this_class = fh.fetch(U2); //Read class name (index)
@@ -64,21 +75,34 @@ public:
 		
 		//Read interfaces
 		unsigned int interfaces_count = fh.fetch(U2);
-		for(int i = 0; i < interfaces_count; i++) u2_interfaces_array.push_back(fh.fetch(U2));
+		for(unsigned int i = 0; i < interfaces_count; i++) u2_interfaces_array.push_back(fh.fetch(U2));
 
 		//Read fields
 		unsigned int fields_count = fh.fetch(U2);
-		for(int i = 0; i < fields_count; i++) field_info_array.push_back(FieldInfo(fetch, lookup));
+		for(unsigned int i = 0; i < fields_count; i++){
+			FieldInfo * fi = new FieldInfo(fetch, &const_pool);
+			field_info_array[fi->get_field_name()] = fi;
+		}
 
 		//Read methods
 		unsigned int methods_count = fh.fetch(U2);
-		for(int i = 0; i < methods_count; i++) method_info_array.push_back(MethodInfo(fetch, lookup));
+		for(unsigned int i = 0; i < methods_count; i++){
+			MethodInfo * mi = new MethodInfo(fetch, &const_pool);
+			method_info_array[mi->get_method_name()] = mi;
+		}
 
 		//Read class attributes
 		unsigned int attributes_count = fh.fetch(U2);
-		for(int i = 0; i < attributes_count; i++) attribute_info_array.push_back(AttributeInfo(fetch, lookup));
+		for(unsigned int i = 0; i < attributes_count; i++){
+			AttributeInfo * ai = new AttributeInfo(fetch, &const_pool);
+			attribute_info_array[ai->get_attribute_name()] = ai;
+		}
 
 		assert(fh.size() == fh.get_cc()); //Check that we actually consumed the whole file.
+	}
+
+	void set_heap(std::function<unsigned int(ObjectRef *)> hp){
+		heap_push = hp;
 	}
 
 	void print(){
@@ -97,37 +121,73 @@ public:
 	 	printf("This class: #%u // %s\n", u2_this_class, get_class_name().c_str());
 		printf("Super class: #%u // %s\n", u2_super_class, get_super_name().c_str());
 		printf("interfaces count: %lu\n", u2_interfaces_array.size());
-		for(int j = 0; j < u2_interfaces_array.size(); j++) {
+		for(unsigned int j = 0; j < u2_interfaces_array.size(); j++) {
 			printf("%u\n", u2_interfaces_array[j]);
 		}
 
 		printf("\n");
 
 		printf("fields count: %lu\n\n", field_info_array.size());
-		for(int j = 0; j < field_info_array.size(); j++){
-			field_info_array[j].print();
+		for (auto it = field_info_array.begin(); it != field_info_array.end(); ++it){
+			it->second->print();
 			printf("\n");
 		}
 
 		printf("\n");
-		
+
 		printf("methods count: %lu\n\n", method_info_array.size());
-		for(int j = 0; j < method_info_array.size(); j++){
-			method_info_array[j].print();
+		for (auto it = method_info_array.begin(); it != method_info_array.end(); ++it){
+			it->second->print();
 			printf("\n");
 		}
-		
+
 		printf("\n");
 
 		printf("attributes count: %lu\n\n", attribute_info_array.size());
-		for(int j = 0; j < attribute_info_array.size(); j++){
-			attribute_info_array[j].print();
+		for (auto it = attribute_info_array.begin(); it != attribute_info_array.end(); ++it){
+			it->second->print();
 			printf("\n");
 		}
 	}
 
-	void link(std::function<ClassFile*(std::string)> get_class){
-		
+	unsigned int allocate_object(){
+		ObjectRef * obj = new ObjectRef(&const_pool);
+		for (auto it = field_info_array.begin(); it != field_info_array.end(); ++it){
+			obj->finder[it->second->get_field_name()] = obj->fields.size();
+			switch(it->second->get_type()){
+				case KOOL_Int:
+					obj->fields.push_back(new int);
+					break;
+				case KOOL_IntArray:
+					obj->fields.push_back(new std::vector<int>());
+					break;
+				case KOOL_Bool:
+					obj->fields.push_back(new bool);
+					break;
+				case KOOL_String:
+					obj->fields.push_back(new std::string());
+					break;
+				case KOOL_Object:
+					obj->fields.push_back(NULL);
+					break;
+			}
+		}
+		return heap_push(obj);
+		return 0;
+	}
+
+	void link(std::function<ClassFile*(std::string)> rte_lookup){
+
+	}
+
+	MethodInfo * get_method(const std::string & name){
+		if(method_info_array.find(name) != method_info_array.end())
+			return method_info_array[name];
+		else return NULL;
+	}
+
+	FieldInfo * get_field(const std::string & name){
+		return field_info_array[name];
 	}
 
 	const unsigned int & get_magic() const { return u4_magic; }
