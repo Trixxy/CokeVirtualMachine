@@ -23,16 +23,33 @@ class MethodInfo{
 	unsigned int u2_descriptor_index;
 	std::vector<AttributeInfo> attribute_info_array;
 	ConstantPool * cp;
+	unsigned int args_size;
 
 public:
 	MethodInfo(){}
-	MethodInfo(std::function<unsigned int(ClassUnit)> fh_fetch, ConstantPool * _cp):attribute_info_array(std::vector<AttributeInfo>()), cp(_cp){
+	MethodInfo(std::function<unsigned int(ClassUnit)> fh_fetch, ConstantPool * _cp):attribute_info_array(std::vector<AttributeInfo>()), cp(_cp), args_size(1){
 		u2_access_flags = fh_fetch(U2);
 		u2_name_index = fh_fetch(U2);
 		u2_descriptor_index = fh_fetch(U2);
 		unsigned int u2_attributes_count = fh_fetch(U2);
-		for(int i = 0; i < u2_attributes_count; i++) attribute_info_array.push_back(AttributeInfo(fh_fetch, cp));
+		for(unsigned int i = 0; i < u2_attributes_count; i++) attribute_info_array.push_back(AttributeInfo(fh_fetch, cp));
 
+		//a small lexer to count the num of args (including objref)
+		std::string descr = cp->lookup(u2_descriptor_index);
+		for(unsigned int i = 0, ignore = 0; i < descr.size(); i++){
+			if(!ignore){
+				switch(descr[i]){
+				case 'I':
+				case 'Z':
+					++args_size;
+					break;
+				case 'L':
+					++args_size;
+					++ignore;
+					break;
+				case ')':goto ARG_LEX;
+				}}else if(!(';'^descr[i]))--ignore;
+		} ARG_LEX: void(0);
 	}
 
 	bool is_main(){
@@ -44,7 +61,7 @@ public:
 	}
 
 	ac_Code * get_acCode(){
-		for(int i = 0; i < attribute_info_array.size(); i++) if(ATTRIBUTE_Code == attribute_info_array[i].get_type()){
+		for(unsigned int i = 0; i < attribute_info_array.size(); i++) if(ATTRIBUTE_Code == attribute_info_array[i].get_type()){
 				return (ac_Code *)attribute_info_array[i].get_container();
 		}
 		fprintf(stderr, "Error: Pepsi Method found no Main Coke.");
@@ -63,6 +80,10 @@ public:
 		return cp;
 	}
 
+	unsigned int get_args_size(){
+		return args_size;
+	}
+
 	void print() {
 		printf("Method access flags: 0x%04x ", u2_access_flags);
 		print_access_flags(u2_access_flags, MethodAccess::flags_tt);
@@ -71,7 +92,7 @@ public:
 		printf("descriptor_index: #%u // %s\n", u2_descriptor_index, cp->lookup(u2_descriptor_index).c_str());
 
 		printf("attributes count: %lu\n", attribute_info_array.size());
-		for(int j = 0; j < attribute_info_array.size(); j++){
+		for(unsigned int j = 0; j < attribute_info_array.size(); j++){
 			attribute_info_array[j].print();
 		}
 	}

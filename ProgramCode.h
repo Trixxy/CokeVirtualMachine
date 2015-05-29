@@ -64,6 +64,10 @@ public:
     void jump(int offset) {
         pc += offset; /* TODO: Double check */
     }
+
+    void terminate(){
+    	pc = code.size();
+    }
 };
 
 #endif 

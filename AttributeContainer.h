@@ -72,7 +72,38 @@ private: ProgramCode coke; public:
 		printf("max stack: %u \t max locals: %u\n", u2_max_stack, u2_max_locals);
 		auto coke = get_coke();
 		while(coke.has_next()){
-			printf("[%4u]:\t%s\n", coke.get_pc(), instruction_tt[coke.next_inst()].c_str());
+			int inst = coke.next_inst();
+			printf("[%4u]:\t%s", coke.get_pc(), instruction_tt[inst].c_str());
+
+			//Throw 1 byte
+			if(inst == 0x10) printf("\t%d",(char)coke.get_u1());
+			else if(inst == 0x12
+				|| inst == 0xa9
+				|| (inst >= 0x15 && inst <= 0x19)
+				|| (inst >= 0x36 && inst <= 0x3a)) printf("\t#%u",coke.get_u1());
+			else if(inst == 0xbc) coke.get_u1();
+
+			//Throw 2 bytes
+			else if((inst >= 0x99 && inst <= 0xa8)
+				|| (inst >= 0xc6 && inst <= 0xc7)) printf("\t%d", (short)coke.get_u2());
+			else if(inst == 0x11) printf("\t%d",(short)coke.get_u2());
+			else if(inst == 0xb3
+				|| inst == 0xbb
+				|| inst == 0xbd
+				|| (inst >= 0xb5 && inst <= 0xb8)
+				|| (inst >= 0xc0 && inst <= 0xc1)
+				|| (inst >= 0x13 && inst <= 0x14)) printf("\t#%u",(short)coke.get_u2());
+			else if(inst == 0xb2 || inst == 0xb4) printf("\t#%u #%u",(char)coke.get_u1(),(char)coke.get_u1());
+			else if(inst == 0x84) printf("\t%d #%u", (char)coke.get_u1(), coke.get_u1());
+
+			//Throw 3 bytes
+			else if(inst == 0xc5) printf("\t#%u %u", coke.get_u2(),coke.get_u1());
+
+			//Throw 4 bytes
+			else if(inst == 0xc8 || inst == 0xc9) printf("\t%u",coke.get_u4());
+			else if(inst == 0xc8 || inst == 0xc9) printf("\t#%u %d %d",coke.get_u2(),(char)coke.get_u1(),coke.get_u1());
+
+			printf("\n");
 		}
 	}
 };

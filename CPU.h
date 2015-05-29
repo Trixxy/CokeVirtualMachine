@@ -7,7 +7,7 @@
 #include "FramedStack.h"
 #include "RunTimeEnvironment.h"
 
-#define TRACE 1
+#define TRACE 0
 
 class CPU{
     FramedStack * stack;
@@ -20,7 +20,6 @@ class CPU{
     /***************************************************/
 
 public:
-    //TODO take pc as parameter when done.
     CPU():stack(new FramedStack()){ link_exec_map(); }
     void set_environment(RunTimeEnvironment * rte){RTE = rte;}
     void start(MethodInfo * meth){
@@ -123,7 +122,8 @@ private:
     }
     inline void vm_ldc(){
     	//EXAMPLE OF WHAT not TO DO!
-//        unsigned int val = pc->get_u4();
+    	unsigned int index = pc->get_u1();
+    	//Get from cp to stack (if obj -> ref)
 //        stack->push(val);
     }
     inline void vm_ldc_w(){/* TO BE IMPLEMENTED */}
@@ -244,7 +244,10 @@ private:
     inline void vm_pop(){
         stack->pop();
     }
-    inline void vm_pop2(){/* TO BE IMPLEMENTED */}
+    inline void vm_pop2(){
+    	stack->pop();
+    	stack->pop();
+    }
     inline void vm_dup(){
     	auto top = stack->pop();
     	stack->push(top);
@@ -255,7 +258,13 @@ private:
     inline void vm_dup2(){/* TO BE IMPLEMENTED */}
     inline void vm_dup2_x1(){/* TO BE IMPLEMENTED */}
     inline void vm_dup2_x2(){/* TO BE IMPLEMENTED */}
-    inline void vm_swap(){/* TO BE IMPLEMENTED */}
+    inline void vm_swap(){
+    	auto val1 = stack->pop();
+    	auto val2 = stack->pop();
+    	stack->push(val1);
+    	stack->push(val2);
+
+    }
     inline void vm_iadd(){
         auto val1 = stack->pop();
         auto val2 = stack->pop();
@@ -266,8 +275,8 @@ private:
     inline void vm_fadd(){/* TO BE IMPLEMENTED */}
     inline void vm_dadd(){/* TO BE IMPLEMENTED */}
     inline void vm_isub(){
-        int val1 = (int) stack->pop();
-        int val2 = (int) stack->pop();
+    	int val2 = (int) stack->pop();
+    	int val1 = (int) stack->pop();
         int res = val1 - val2;
         stack->push(res);
     }
@@ -275,8 +284,8 @@ private:
     inline void vm_fsub(){/* TO BE IMPLEMENTED */}
     inline void vm_dsub(){/* TO BE IMPLEMENTED */}
     inline void vm_imul(){
-        int val1 = (int) stack->pop();
-        int val2 = (int) stack->pop();
+    	int val2 = (int) stack->pop();
+    	int val1 = (int) stack->pop();
         int res = val1 * val2;
         stack->push(res);
     }
@@ -284,15 +293,19 @@ private:
     inline void vm_fmul(){/* TO BE IMPLEMENTED */}
     inline void vm_dmul(){/* TO BE IMPLEMENTED */}
     inline void vm_idiv(){
-        int val1 = (int) stack->pop();
-        int val2 = (int) stack->pop();
+    	int val2 = (int) stack->pop();
+    	int val1 = (int) stack->pop();
         int res = val1 / val2;
         stack->push(res);
     }
     inline void vm_ldiv(){/* TO BE IMPLEMENTED */}
     inline void vm_fdiv(){/* TO BE IMPLEMENTED */}
     inline void vm_ddiv(){/* TO BE IMPLEMENTED */}
-    inline void vm_irem(){/* TO BE IMPLEMENTED */}
+    inline void vm_irem(){
+    	int val2 = stack->pop();
+    	int val1 = stack->pop();
+    	stack->push(val1%val2);
+    }
     inline void vm_lrem(){/* TO BE IMPLEMENTED */}
     inline void vm_frem(){/* TO BE IMPLEMENTED */}
     inline void vm_drem(){/* TO BE IMPLEMENTED */}
@@ -312,7 +325,11 @@ private:
     inline void vm_lor(){/* TO BE IMPLEMENTED */}
     inline void vm_ixor(){/* TO BE IMPLEMENTED */}
     inline void vm_lxor(){/* TO BE IMPLEMENTED */}
-    inline void vm_iinc(){/* TO BE IMPLEMENTED */}
+    inline void vm_iinc(){ //TESTED
+    	unsigned int index = pc->get_u1();
+    	unsigned int constant = pc->get_u1();
+    	(*stack)[index] += (char)constant;
+    }
     inline void vm_i2l(){/* TO BE IMPLEMENTED */}
     inline void vm_i2f(){/* TO BE IMPLEMENTED */}
     inline void vm_i2d(){/* TO BE IMPLEMENTED */}
@@ -333,115 +350,120 @@ private:
     inline void vm_fcmpg(){/* TO BE IMPLEMENTED */}
     inline void vm_dcmpl(){/* TO BE IMPLEMENTED */}
     inline void vm_dcmpg(){/* TO BE IMPLEMENTED */}
-    inline void vm_ifeq(){
+    inline void vm_ifeq(){ /* TESTED */
         unsigned int val = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val == 0) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_ifne(){
         unsigned int val = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val != 0) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_iflt(){ /* TODO: UNTESTED */
         unsigned int val = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val < 0) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_ifge(){ /* TODO: UNTESTED */
         unsigned int val = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val >= 0) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_ifgt(){ /* TODO: UNTESTED */
         unsigned int val = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val > 0) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_ifle(){ /* TODO: UNTESTED */
         unsigned int val = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val <= 0) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
-    inline void vm_if_icmpeq(){
-        unsigned int val1 = stack->pop();
+    inline void vm_if_icmpeq(){ /* TESTED */
         unsigned int val2 = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        unsigned int val1 = stack->pop();
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val1 == val2) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_if_icmpne(){ /* TODO: UNTESTED */
-        unsigned int val1 = stack->pop();
         unsigned int val2 = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        unsigned int val1 = stack->pop();
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
+        printf("\n\nicmpne: %d != %d --> ", val1, val2);
         if(val1 != val2) {
-            pc->jump((short)offset);
+        	printf("TRUE\n\n");
+            pc->jump(offset);
+        }else{
+        	printf("FALSE\n\n");
         }
     }
     inline void vm_if_icmplt(){
-        unsigned int val1 = stack->pop();
         unsigned int val2 = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        unsigned int val1 = stack->pop();
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val1 < val2) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_if_icmpge(){ /* TODO: UNTESTED */
-        unsigned int val1 = stack->pop();
         unsigned int val2 = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        unsigned int val1 = stack->pop();
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
+        printf("\n%d >= %d\n", val1, val2);
         if(val1 >= val2) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_if_icmpgt(){ /* TODO: UNTESTED */
-        unsigned int val1 = stack->pop();
         unsigned int val2 = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        unsigned int val1 = stack->pop();
+        short offset = (((short)pc->get_u2()))-3; //-2 for the offset bytes we just read
         if(val1 > val2) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_if_icmple(){ /* TODO: UNTESTED */
-        unsigned int val1 = stack->pop();
         unsigned int val2 = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+        unsigned int val1 = stack->pop();
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val1 <= val2) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_if_acmpeq(){ /* TODO: UNTESTED */
-        unsigned int val1 = stack->pop();
         unsigned int val2 = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+    	unsigned int val1 = stack->pop();
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val1 == val2) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_if_acmpne(){ /* TODO: UNTESTED */
-        unsigned int val1 = stack->pop();
         unsigned int val2 = stack->pop();
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
+    	unsigned int val1 = stack->pop();
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
         if(val1 != val2) {
-            pc->jump((short)offset);
+            pc->jump(offset);
         }
     }
     inline void vm_goto(){
-        unsigned int offset = pc->get_u2()-2; //-2 for the offset bytes we just read
-        pc->jump((short)offset);
+        short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
+        pc->jump(offset);
     }
     inline void vm_jsr(){/* TO BE IMPLEMENTED */}
     inline void vm_ret(){/* TO BE IMPLEMENTED */}
@@ -451,6 +473,7 @@ private:
     	unsigned int st = stack->pop();
 		stack->pop_frame();
 		stack->push(st);
+		pc->terminate();
 	}
     inline void vm_lreturn(){/* TO BE IMPLEMENTED */}
     inline void vm_freturn(){/* TO BE IMPLEMENTED */}
@@ -462,6 +485,7 @@ private:
     }
     inline void vm_return(){
     	stack->pop_frame();
+    	pc->terminate();
     }
     inline void vm_getstatic(){
     	unsigned int index = pc->get_u2();
@@ -471,7 +495,12 @@ private:
     	/* No other cases since not supported by kool */
      }
     inline void vm_putstatic(){/* TO BE IMPLEMENTED */}
-    inline void vm_getfield(){/* TO BE IMPLEMENTED */}
+    inline void vm_getfield(){
+    	unsigned int index = pc->get_u2();
+    	unsigned int refobj = stack->pop();
+    	stack->push(*((unsigned int *)(RTE->get_object(refobj)->ref_by_name(current_method->get_cp()->get_ref_method(index)))));
+
+    }
     inline void vm_putfield(){
     	unsigned int index = pc->get_u2();
     	unsigned int val = stack->pop();
@@ -494,21 +523,39 @@ private:
 //    	printf("\nINVOKEVIRTUAL: %s\n",current_method->get_cp()->get_ref_class(index).substr(0, 19).c_str());
     	if("java/io/PrintStream" == current_method->get_cp()->get_ref_class(index).substr(0, 19)){
     		unsigned int val = stack->pop();
+#if TRACE
+    		std::cout << std::endl << "STDOUT : " << val << std::endl;
+#else
     		std::cout << val << std::endl;
+#endif
     	}else{
     		RTE->get_class(current_method->get_cp()->get_ref_class(index));
-            unsigned int _this = stack->pop();
 
 			auto nm = RTE->get_class(current_method->get_cp()->get_ref_class(index))
 				->get_method(current_method->get_cp()->get_ref_method(index));
 
+			int * powerade = new int[nm->get_args_size()];
+			for(unsigned int i = 0; i < nm->get_args_size(); i++){
+				powerade[nm->get_args_size()-i-1] = stack->pop();
+			}
 			stack->push_frame(nm->get_acCode()->u2_max_locals);
-			(*stack)[0]=_this;
+			for(unsigned int i = 0; i < nm->get_args_size(); i++){
+				(*stack)[i] = powerade[i];
+			}
+#if TRACE
+			printf("\nARGS: |");
+			for(unsigned int i = 0; i < nm->get_args_size(); i++){
+				printf(" %u |", powerade[i]);
+			}
+			printf("\n");
+#endif
+			delete[] powerade;
+
 			run(nm);
     	}
 #if TRACE
-    	printf("%d", sizeof("java/io/PrintStream.println"));
-    	printf("%s",current_method->get_cp()->lookup(index).substr(0, 27).c_str());
+//    	printf("%d", sizeof("java/io/PrintStream.println"));
+//    	printf("%s",current_method->get_cp()->lookup(index).substr(0, 27).c_str());
 #endif
     }
     void vm_invokespecial(){
