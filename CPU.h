@@ -7,7 +7,7 @@
 #include "FramedStack.h"
 #include "RunTimeEnvironment.h"
 
-#define TRACE 0
+#define TRACE 1
 
 class CPU{
     FramedStack * stack;
@@ -121,10 +121,16 @@ private:
     	stack->push(s);
     }
     inline void vm_ldc(){
-    	//EXAMPLE OF WHAT not TO DO!
     	unsigned int index = pc->get_u1();
-    	//Get from cp to stack (if obj -> ref)
-//        stack->push(val);
+    	ConstantPoolElement * cpe = current_method->get_cp()->get_cpe(index);
+
+    	//CURRENTLY SUPPORTS INTEGERS AND STRINGS
+
+    	if(cpe->get_tag() == CONSTANT_Integer){
+    		stack->push(((cp_Integer*)cpe)->u4_bytes); //TODO: check if right order
+    	}else if(cpe->get_tag() == CONSTANT_String){
+    		stack->push(((cp_String*)cpe)->u2_string_index);
+    	}
     }
     inline void vm_ldc_w(){/* TO BE IMPLEMENTED */}
     inline void vm_ldc2_w(){/* TO BE IMPLEMENTED */}
@@ -424,7 +430,6 @@ private:
         unsigned int val2 = stack->pop();
         unsigned int val1 = stack->pop();
         short offset = ((short)pc->get_u2())-3; //-2 for the offset bytes we just read
-        printf("\n%d >= %d\n", val1, val2);
         if(val1 >= val2) {
             pc->jump(offset);
         }
@@ -482,6 +487,7 @@ private:
     	unsigned int st = stack->pop();
     	stack->pop_frame();
     	stack->push(st);
+    	pc->terminate();
     }
     inline void vm_return(){
     	stack->pop_frame();
@@ -493,13 +499,12 @@ private:
     		/* We have native support for println, nothing to load */
     	}
     	/* No other cases since not supported by kool */
-     }
+    }
     inline void vm_putstatic(){/* TO BE IMPLEMENTED */}
     inline void vm_getfield(){
     	unsigned int index = pc->get_u2();
     	unsigned int refobj = stack->pop();
     	stack->push(*((unsigned int *)(RTE->get_object(refobj)->ref_by_name(current_method->get_cp()->get_ref_method(index)))));
-
     }
     inline void vm_putfield(){
     	unsigned int index = pc->get_u2();
@@ -520,13 +525,23 @@ private:
     }
     inline void vm_invokevirtual(){
     	unsigned int index = pc->get_u2();
-//    	printf("\nINVOKEVIRTUAL: %s\n",current_method->get_cp()->get_ref_class(index).substr(0, 19).c_str());
     	if("java/io/PrintStream" == current_method->get_cp()->get_ref_class(index).substr(0, 19)){
     		unsigned int val = stack->pop();
+
+    		bool isString = false;
+
+    		auto tmp = current_method->get_cp()->lookup(index);
+    		if(tmp.find(';') != tmp.size()){
+    			isString = true;
+    		}
+
 #if TRACE
-    		std::cout << std::endl << "STDOUT : " << val << std::endl;
+	    	printf("\nINVOKEVIRTUAL: %s\n",current_method->get_cp()->lookup(index).c_str());
+	    	if(isString) std::cout << std::endl << "STDOUT : " << current_method->get_cp()->lookup(val) << std::endl;
+	    	else std::cout << std::endl << "STDOUT : " << val << std::endl;
 #else
-    		std::cout << val << std::endl;
+	    	if(isString) std::cout << current_method->get_cp()->lookup(val) << std::endl;
+	    	else std::cout << val << std::endl;
 #endif
     	}else{
     		RTE->get_class(current_method->get_cp()->get_ref_class(index));
@@ -580,6 +595,9 @@ private:
     inline void vm_invokedynamic(){/* TO BE IMPLEMENTED */ }
     inline void vm_new(){
     	unsigned int index = pc->get_u2();
+
+    	//TODO HANDLE FOR THE STRINGBUILDER CASE
+
     	ClassFile * cl = RTE->get_class(current_method->get_cp()->lookup(index));
     	unsigned int objref = cl->allocate_object();
     	stack->push(objref);
@@ -597,7 +615,7 @@ private:
     inline void vm_ifnull(){/* TO BE IMPLEMENTED */}
     inline void vm_ifnonnull(){/* TO BE IMPLEMENTED */}
     inline void vm_goto_w(){
-        unsigned int offset = pc->get_u4()-4; //-2 for the offset bytes we just read
+        int offset = (int)pc->get_u4()-5; //-4 for the offset bytes we just read
         pc->jump(offset);
     }
     inline void vm_jsr_w(){/* TO BE IMPLEMENTED */}
