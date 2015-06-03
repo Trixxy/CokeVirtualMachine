@@ -1,3 +1,8 @@
+/**
+ * \brief The ConstantPool class represents a run-time constant pool according
+ * to the JVM specification, which contains a range of different constants.
+ */
+
 #ifndef _VM_CONSTANT_POOL_H_
 #define _VM_CONSTANT_POOL_H_
 
@@ -70,6 +75,9 @@ public:
 		for(int i = 0; i < elem.size(); i++) delete elem[i];
 	}
 
+	/**
+	 * Pushes an element to the constant pool that matches the tag. 
+	 */
 	void push_back(const unsigned int & tag){
 		switch(tag){
 			case CONSTANT_Class: elem.push_back(new cp_Class(fh_fetch)); break;
@@ -178,7 +186,9 @@ public:
 		return str.str();
 	}
 
-
+	/**
+	 * Get an element from the constant pool.
+	 */
 	ConstantPoolElement * get_cpe(const unsigned int & i){
 		return elem[i-1];
 	}

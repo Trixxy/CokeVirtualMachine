@@ -1,3 +1,12 @@
+/**
+ * \brief The AttributeContainer class is an abstract class
+ * that represents a cointainer for different kinds of attributes 
+ * to easily separate between different attributes.
+ *
+ * The different containers are for ConstantValue, Code, UnImplemented
+ * and UnRecognized.
+ */
+
 #ifndef _ATTRIBUTE_CONTAINER_H_
 #define _ATTRIBUTE_CONTAINER_H_
 
@@ -13,6 +22,11 @@ struct AttributeContainer {
 protected:
 	AttributeContainer():u1_info_array(std::vector<unsigned int>()){}
 };
+
+/**
+ * \brief The ac_ConstantValue class represents a container for constant
+ * values. 
+ */
 struct ac_ConstantValue: public AttributeContainer {
 	static const AttributeTypes type = ATTRIBUTE_ConstantValue;
 
@@ -26,6 +40,10 @@ struct ac_ConstantValue: public AttributeContainer {
 		printf("Unimplemented Attribute: %s", attribute_types_tt[type].c_str());
 	}
 };
+
+/**
+ * \brief The ac_Code class represents a container for the code. 
+ */
 struct ac_Code: public AttributeContainer {
 	static const AttributeTypes type = ATTRIBUTE_Code;
 	unsigned int u2_max_stack;
@@ -107,6 +125,11 @@ private: ProgramCode coke; public:
 		}
 	}
 };
+
+/**
+ * \brief The ac_UnImplemented class represents a container for the attributes
+ * that are not currently implemented/supported. 
+ */
 struct ac_UnImplemented: public AttributeContainer {
 	AttributeTypes type;
 	ac_UnImplemented(std::function<unsigned int(ClassUnit)> fh_fetch, AttributeTypes t):AttributeContainer(), type(t){
@@ -118,6 +141,11 @@ struct ac_UnImplemented: public AttributeContainer {
 		printf("Unimplemented Attribute: %s", attribute_types_tt[type].c_str());
 	}
 };
+
+/**
+ * \brief The ac_UnRecognized class represents a container for the attributes
+ * that are unrecognized. 
+ */
 struct ac_UnRecognized: public AttributeContainer {
 	std::string type;
 	ac_UnRecognized(std::function<unsigned int(ClassUnit)> fh_fetch, std::string t):AttributeContainer(), type(t){

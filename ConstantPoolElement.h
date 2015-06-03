@@ -1,3 +1,8 @@
+/**
+ * \brief The ConstantPoolElement class is an abstract
+ * class that represents a constant pool element.
+ */
+
 #ifndef _CONSTANT_POOL_ELEMENT_TYPES_H_
 #define _CONSTANT_POOL_ELEMENT_TYPES_H_
 
@@ -11,6 +16,11 @@ struct ConstantPoolElement {
 protected:
 	ConstantPoolElement(){}
 };
+
+/**
+ * \brief The cp_Class class represents a class element in the constant
+ * pool.
+ */
 struct cp_Class: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Class;
 	unsigned int u2_name_index; //1
@@ -22,6 +32,11 @@ struct cp_Class: public ConstantPoolElement {
 //		printf(" //u2_name_index");
 	};
 };
+
+/**
+ * \brief The cp_Fieldref class represents a field reference element in the 
+ *constant pool.
+ */
 struct cp_Fieldref: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Fieldref;
 	unsigned int u2_class_index; //1
@@ -34,6 +49,11 @@ struct cp_Fieldref: public ConstantPoolElement {
 //		printf(" //class_index.name_and_type_index");
 	};
 };
+
+/**
+ * \brief The cp_Methodref class represents a method reference element in the 
+ * constant pool.
+ */
 struct cp_Methodref: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Methodref;
 	unsigned int u2_class_index; //1
@@ -46,6 +66,11 @@ struct cp_Methodref: public ConstantPoolElement {
 //		printf(" //class_index.name_and_type_index");
 	};
 };
+
+/**
+ * \brief The cp_InterfaceMethodref class represents an interface method reference 
+ * element in the constant pool.
+ */
 struct cp_InterfaceMethodref: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_InterfaceMethodref;
 	unsigned int u2_class_index;
@@ -58,6 +83,11 @@ struct cp_InterfaceMethodref: public ConstantPoolElement {
 //		printf(" //TOTO(class_index, name_and_type_index)");
 	};
 };
+
+/**
+ * \brief The cp_String class represents a string element in the
+ * constant pool.
+ */
 struct cp_String: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_String;
 	unsigned int u2_string_index; //1
@@ -69,6 +99,11 @@ struct cp_String: public ConstantPoolElement {
 //		printf(" //string_index");
 	};
 };
+
+/**
+ * \brief The cp_Integer class represents an integer element in the
+ * constant pool.
+ */
 struct cp_Integer: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Integer;
 	unsigned int u4_bytes; //1
@@ -80,6 +115,11 @@ struct cp_Integer: public ConstantPoolElement {
 //		printf(" //bytes", u4_bytes);
 	};
 };
+
+/**
+ * \brief The cp_Float class represents a float element in the
+ * constant pool.
+ */
 struct cp_Float: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Float;
 	unsigned int u4_bytes; //1
@@ -91,6 +131,11 @@ struct cp_Float: public ConstantPoolElement {
 //		printf(" //bytes");
 	};
 };
+
+/**
+ * \brief The cp_Long class represents a long element in the
+ * constant pool.
+ */
 struct cp_Long: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Long;
 	unsigned int u4_high_bytes; //1
@@ -103,6 +148,11 @@ struct cp_Long: public ConstantPoolElement {
 //		printf(" //high_bytes, low_bytes");
 	};
 };
+
+/**
+ * \brief The cp_Double class represents a double element in the
+ * constant pool.
+ */
 struct cp_Double: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Double;
 	unsigned int u4_high_bytes; //1
@@ -115,6 +165,10 @@ struct cp_Double: public ConstantPoolElement {
 //		printf(" //high_bytes, low_bytes");
 	};
 };
+
+/**
+ * \brief The cp_NameAndType class represents TODO: COMMENT
+ */
 struct cp_NameAndType: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_NameAndType;
 	unsigned int u2_name_index; //1
@@ -127,6 +181,11 @@ struct cp_NameAndType: public ConstantPoolElement {
 //		printf(" //name_index, descriptor_index");
 	};
 };
+
+/**
+ * \brief The cp_Utf8 class represents an utf8 character in the
+ * constant pool.
+ */
 struct cp_Utf8: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Utf8;
 	std::string u1_bytes_array; //2 u1_bytes[length]
@@ -143,6 +202,10 @@ struct cp_Utf8: public ConstantPoolElement {
 //		printf("\"%s\"", u1_bytes_array.c_str());
 	};
 };
+
+/**
+ * \brief The cp_MethodHandle class represents TODO: COMMENT.
+ */
 struct cp_MethodHandle: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_MethodHandle;
 	unsigned int u1_reference_kind; //1
@@ -155,6 +218,11 @@ struct cp_MethodHandle: public ConstantPoolElement {
 //		printf(" //TOTO(reference_kind, reference_index)");
 	};
 };
+
+/**
+ * \brief The cp_MethodType class represents a method type in the
+ * constant pool.
+ */
 struct cp_MethodType: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_MethodType;
 	unsigned int u2_descriptor_index; //1
@@ -166,6 +234,10 @@ struct cp_MethodType: public ConstantPoolElement {
 //		printf(" //TOTO(descriptor_index)");
 	};
 };
+
+/**
+ * \brief The cp_Invoke Dynamic class represents TODO: COMMENT
+ */
 struct cp_InvokeDynamic: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_InvokeDynamic;
 	unsigned int u2_bootstrap_method_attr_index; //1
