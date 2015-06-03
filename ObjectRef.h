@@ -1,8 +1,3 @@
-/**
- * \brief The ObjectRef class is a heap element to represent an object,
- * an object simply contains the values of fields.
- */
-
 #ifndef _VM_OBJECT_REF_H_
 #define _VM_OBJECT_REF_H_
 
@@ -11,6 +6,10 @@
 
 class ConstantPool; //forward-reference
 
+/**
+ * \brief The ObjectRef class is a heap element to represent an object,
+ * an object simply contains the values of fields.
+ */
 class ObjectRef{
 	friend class ClassFile;
 	std::map<std::string, unsigned int> finder;

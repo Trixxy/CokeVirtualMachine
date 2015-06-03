@@ -1,8 +1,3 @@
-/**
- * \brief The FieldInfo class contains the info related to a field in a classfile,
- * the format is according to the JVM specification.
- */
-
 #ifndef _VM_FIELD_INFO_H_
 #define _VM_FIELD_INFO_H_
 
@@ -22,6 +17,10 @@
 
 class ConstantPool;
 
+/**
+ * \brief The FieldInfo class contains the info related to a field in a classfile,
+ * the format is according to the JVM specification.
+ */
 class FieldInfo{
 	unsigned int u2_access_flags;
 	unsigned int u2_name_index;

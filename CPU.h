@@ -1,9 +1,3 @@
-/**
- * \brief This is the CPU class, where meaning of machine instructions is defined.
- * It contains a FramedStack on which it operates and pointer to RunTimeEnvironment
- * in order to resolve linking related stuff.
- */
-
 #ifndef _VM_CPU_H_
 #define _VM_CPU_H_
 
@@ -15,6 +9,12 @@
 //when true, prints a trace of execution & stack
 #define TRACE 0
 
+
+/**
+ * \brief This is the CPU class, where meaning of machine instructions is defined.
+ * It contains a FramedStack on which it operates and pointer to RunTimeEnvironment
+ * in order to resolve linking related stuff.
+ */
 class CPU{
     FramedStack * stack;
     RunTimeEnvironment * RTE;

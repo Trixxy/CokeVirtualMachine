@@ -1,13 +1,12 @@
-/**
- * This class contains code and provides functionality to operate on that code.
- */
-
 #ifndef _VM_PROGRAM_CODE_H_
 #define _VM_PROGRAM_CODE_H_
 
 #include <vector>
 #include "DefConstTrans.h"
 
+/**
+ * \brief This class contains code and provides functionality to operate on that code.
+ */
 class ProgramCode{
     friend class ac_Code;
 

@@ -1,12 +1,11 @@
+#include <cstdio>
+#include "CokeMachine.h"
+
 /**
  * Just a little sparker to get everyting started,
  * nothing much to see here, just initialize a new machine
  * and give it the name of files to load.
  */
-
-#include <cstdio>
-#include "CokeMachine.h"
-
 int main(int argc, char **argv){
 	if(argc <= 1){
 		fprintf(stderr, "Error: at least one file is required.\n");

@@ -1,8 +1,3 @@
-/**
- * \brief The ConstantPool class represents a run-time constant pool according
- * to the JVM specification, which contains a range of different constants.
- */
-
 #ifndef _VM_CONSTANT_POOL_H_
 #define _VM_CONSTANT_POOL_H_
 
@@ -12,8 +7,12 @@
 #include "DefConstTrans.h"
 #include "ConstantPoolElement.h"
 
-class ClassFile; //forward declaration
+class ClassFile; //forward-reference
 
+/**
+ * \brief The ConstantPool class represents a run-time constant pool according
+ * to the JVM specification.
+ */
 class ConstantPool{
 	std::vector<ConstantPoolElement*> elem;
 	std::function<unsigned int(ClassUnit)> fh_fetch;

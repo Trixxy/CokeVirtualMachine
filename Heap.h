@@ -1,15 +1,14 @@
-/**
- * \brief The Heap class contains a chunk of memory on which object can be stored.
- *
- * Currently, it is just a wrapper for a vector of ObjectRef.
- */
-
 #ifndef _VM_HEAP_H_
 #define _VM_HEAP_H_
 
 #include <vector>
 #include "ObjectRef.h"
 
+/**
+ * \brief The Heap class contains a chunk of memory on which object can be stored.
+ *
+ * Currently, it is just a wrapper for a vector of ObjectRef.
+ */
 class Heap{
 	std::vector<ObjectRef *> memory;
 public:

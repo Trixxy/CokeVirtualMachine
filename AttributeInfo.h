@@ -1,8 +1,3 @@
-/**
- * \brief The AttributeInfo class contains the info related to an attribute in a classfile,
- * the format is according to the JVM specification.
- */
-
 #ifndef _VM_ATTRIBUTE_INFO_H_
 #define _VM_ATTRIBUTE_INFO_H_
 
@@ -11,8 +6,12 @@
 #include <map>
 #include "AttributeContainer.h"
 
-class ConstantPool;
+class ConstantPool; //forward-reference
 
+/**
+ * \brief The AttributeInfo class contains the info related to an attribute in a classfile,
+ * the format is according to the JVM specification.
+ */
 class AttributeInfo{
 	unsigned int u2_attribute_name_index;
 

@@ -1,6 +1,9 @@
 #ifndef _VM_FRAMED_STACK_H_
 #define _VM_FRAMED_STACK_H_
 
+#include <deque>
+#include <cstdio>
+
 /**
  * \brief A FramedStack is simply a stack with support to push and pop frames.
  *
@@ -9,10 +12,6 @@
  *
  * This stack is hardcoded to operate on 32-bit words.
  */
-
-#include <deque>
-#include <cstdio>
-
 class FramedStack {
 	std::deque<unsigned int> * instack;
     unsigned int fp, fc, lc;

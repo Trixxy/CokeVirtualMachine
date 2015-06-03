@@ -1,8 +1,3 @@
-/**
- * \brief The MethodInfo class contains the info related to a method in a classfile,
- * the format is according to the JVM specification.
- */
-
 #ifndef _VM_METHOD_INFO_H_
 #define _VM_METHOD_INFO_H_
 
@@ -22,6 +17,10 @@
 
 class ConstantPool; //forward-reference
 
+/**
+ * \brief The MethodInfo class contains the info related to a method in a classfile,
+ * the format is according to the JVM specification.
+ */
 class MethodInfo{
 	unsigned int u2_access_flags;
 	unsigned int u2_name_index;

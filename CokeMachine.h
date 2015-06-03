@@ -1,9 +1,3 @@
-/**
- * \brief This is the main class where everything starts.
- * It contains a RunTimeEnvironment, a CPU and pointer to
- * the main method where the CPU should start execution.
- */
-
 #ifndef _COKE_MACHINE_H_
 #define _COKE_MACHINE_H_
 
@@ -13,6 +7,11 @@
 #include "CPU.h"
 #include "RunTimeEnvironment.h"
 
+/**
+ * \brief This is the main class where everything starts.
+ * It contains a RunTimeEnvironment, a CPU and pointer to
+ * the main method where the CPU should start execution.
+ */
 class CokeMachine{
 	CPU * cpu;
 	RunTimeEnvironment * RTE;

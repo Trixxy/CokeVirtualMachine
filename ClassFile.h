@@ -1,8 +1,3 @@
-/**
- * \brief The ClassFile class parses a classfiles according to the format
- * specified in the JVM specification
- */
-
 #ifndef _VM_CLASS_FILE_H_
 #define _VM_CLASS_FILE_H_
 
@@ -39,6 +34,10 @@ u2             attributes_count;
 attribute_info attributes[attributes_count];
 */
 
+/**
+ * \brief The ClassFile class parses a classfiles according to the format
+ * specified in the JVM specification
+ */
 class ClassFile{
 	FileHandler fh; //file handler
 	unsigned int u4_magic;

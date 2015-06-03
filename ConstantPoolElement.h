@@ -1,8 +1,3 @@
-/**
- * \brief The ConstantPoolElement class is an abstract
- * class that represents a constant pool element.
- */
-
 #ifndef _CONSTANT_POOL_ELEMENT_TYPES_H_
 #define _CONSTANT_POOL_ELEMENT_TYPES_H_
 
@@ -10,6 +5,10 @@
 #include <sstream>
 #include <string>
 
+/**
+ * \brief The ConstantPoolElement class is an abstract
+ * class that represents a constant pool element.
+ */
 struct ConstantPoolElement {
 	virtual unsigned int get_tag() = 0;
 	virtual void print() = 0;
@@ -35,7 +34,7 @@ struct cp_Class: public ConstantPoolElement {
 
 /**
  * \brief The cp_Fieldref class represents a field reference element in the 
- *constant pool.
+ * constant pool.
  */
 struct cp_Fieldref: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_Fieldref;
@@ -167,7 +166,8 @@ struct cp_Double: public ConstantPoolElement {
 };
 
 /**
- * \brief The cp_NameAndType class represents TODO: COMMENT
+ * \brief The cp_NameAndType class represents a name and
+ * type element in the constant pool.
  */
 struct cp_NameAndType: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_NameAndType;
@@ -204,7 +204,8 @@ struct cp_Utf8: public ConstantPoolElement {
 };
 
 /**
- * \brief The cp_MethodHandle class represents TODO: COMMENT.
+ * \brief The cp_MethodHandle class represents an method handle
+ * element in the constant pool.
  */
 struct cp_MethodHandle: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_MethodHandle;
@@ -236,7 +237,8 @@ struct cp_MethodType: public ConstantPoolElement {
 };
 
 /**
- * \brief The cp_Invoke Dynamic class represents TODO: COMMENT
+ * \brief The cp_InvokeDynamic class represents an invoke dynamic
+ * element in the constant pool.
  */
 struct cp_InvokeDynamic: public ConstantPoolElement {
 	static const unsigned int tag = CONSTANT_InvokeDynamic;

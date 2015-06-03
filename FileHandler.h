@@ -1,7 +1,3 @@
-/**
- * \brief The FileHandler class processes a file so it can be accessed one byte at a time.
- */
-
 #ifndef _VM_CODE_HANDLER_H_
 #define _VM_CODE_HANDLER_H_
 
@@ -11,6 +7,9 @@
 #include <vector>
 #include <cstdio>
 
+/**
+ * \brief The FileHandler class processes a file so it can be accessed one byte at a time.
+ */
 class FileHandler{
 	std::vector<byte> code;
 	unsigned int cc; //code counter
