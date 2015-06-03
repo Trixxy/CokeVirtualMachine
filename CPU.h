@@ -7,7 +7,7 @@
 #include "FramedStack.h"
 #include "RunTimeEnvironment.h"
 
-#define TRACE 1
+#define TRACE 0
 
 class CPU{
     FramedStack * stack;
@@ -531,7 +531,7 @@ private:
     		bool isString = false;
 
     		auto tmp = current_method->get_cp()->lookup(index);
-    		if(tmp.find(';') != tmp.size()){
+    		if(tmp.find(';') != tmp.npos){
     			isString = true;
     		}
 
