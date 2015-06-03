@@ -1,3 +1,8 @@
+/**
+ * \brief The AttributeInfo class contains the info related to an attribute in a classfile,
+ * the format is according to the JVM specification.
+ */
+
 #ifndef _VM_ATTRIBUTE_INFO_H_
 #define _VM_ATTRIBUTE_INFO_H_
 

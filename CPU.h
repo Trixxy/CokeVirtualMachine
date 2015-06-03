@@ -1,12 +1,18 @@
+/**
+ * \brief This is the CPU class, where meaning of machine instructions is defined.
+ * It contains a FramedStack on which it operates and pointer to RunTimeEnvironment
+ * in order to resolve linking related stuff.
+ */
+
 #ifndef _VM_CPU_H_
 #define _VM_CPU_H_
 
-#include <deque>
 #include <iostream>
 #include "ProgramCode.h"
 #include "FramedStack.h"
 #include "RunTimeEnvironment.h"
 
+//when true, prints a trace of execution & stack
 #define TRACE 0
 
 class CPU{
@@ -14,14 +20,22 @@ class CPU{
     RunTimeEnvironment * RTE;
     void (CPU::*exec_map[256])(void);
 
-    /* These two should be updated upon a frame change */
     ProgramCode * pc;
     MethodInfo * current_method;
-    /***************************************************/
 
 public:
     CPU():stack(new FramedStack()){ link_exec_map(); }
+
+    /**
+     * Sets environment for the CPU, the CPU needs to have access to a
+     * fully constructed RunTimeEnvironment, otherwise the dynamic linking
+     * wouldn't work, amongst other functionalities.
+     */
     void set_environment(RunTimeEnvironment * rte){RTE = rte;}
+
+    /**
+     * Starts execution at the specified method.
+     */
     void start(MethodInfo * meth){
     	ac_Code * acCode = meth->get_acCode();
 
@@ -50,6 +64,12 @@ public:
         }
     }
 
+private:
+
+    /**
+     * A private run function that expects to run on a prepared stack.
+     * Beside that, it does the same work as the start function.
+     */
     void run(MethodInfo * meth){
 #if TRACE
     	printf("->Entering new function: \n");
@@ -81,7 +101,11 @@ public:
 #endif
     }
 
-private:
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //START OF INSTRUCTION IMPLEMENTATION
+    ///////////////////////////////////////////////////////////////////////////////////
+
     inline void vm_nop(){ /* No Operation */ }
     inline void vm_aconst_null(){/* TO BE IMPLEMENTED */}
     inline void vm_iconst_m1(){

@@ -1,3 +1,11 @@
+/**
+ * \brief The FieldInfo class contains the info related to a field in a classfile,
+ * the format is according to the JVM specification.
+ */
+
+#ifndef _VM_FIELD_INFO_H_
+#define _VM_FIELD_INFO_H_
+
 // field_info {
 //     u2             access_flags;
 //     u2             name_index;
@@ -5,9 +13,6 @@
 //     u2             attributes_count;
 //     attribute_info attributes[attributes_count];
 // }
-
-#ifndef _VM_FIELD_INFO_H_
-#define _VM_FIELD_INFO_H_
 
 #include <vector>
 #include <string>

@@ -1,6 +1,7 @@
 #ifndef _VM_CONSTANT_POOL_H_
 #define _VM_CONSTANT_POOL_H_
 
+#include <iostream>
 #include <sstream>
 #include <functional>
 #include "DefConstTrans.h"
@@ -85,7 +86,7 @@ public:
 			case CONSTANT_MethodHandle: elem.push_back(new cp_MethodHandle(fh_fetch)); break;
 			case CONSTANT_MethodType: elem.push_back(new cp_MethodType(fh_fetch)); break;
 			case CONSTANT_InvokeDynamic: elem.push_back(new cp_InvokeDynamic(fh_fetch)); break;	
-			default: std::cerr << "Unrecognized constant pool tag.\n";
+			default: std::cerr << "Unrecognized constant pool tag.\n"; break;
 		}
 	}
 
@@ -126,6 +127,7 @@ public:
 			case CONSTANT_InvokeDynamic:
 				break;
 			default: std::cerr << "Unrecognized constant pool tag.\n";
+				break;
 		}
 	}
 
@@ -166,6 +168,7 @@ public:
 			case CONSTANT_InvokeDynamic:
 				break;
 			default: std::cerr << "Unrecognized constant pool tag.\n";
+				break;
 		}
 	}
 

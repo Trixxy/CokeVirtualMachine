@@ -1,3 +1,8 @@
+/**
+ * \brief The ClassFile class parses a classfiles according to the format
+ * specified in the JVM specification
+ */
+
 #ifndef _VM_CLASS_FILE_H_
 #define _VM_CLASS_FILE_H_
 
@@ -5,6 +10,7 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include <cassert>
 #include "DefConstTrans.h"
 #include "FileHandler.h"
 #include "ConstantPool.h"
@@ -13,7 +19,8 @@
 #include "AttributeInfo.h"
 #include "ObjectRef.h"
 
-/*
+/* CONTENT OF FILE:
+
 u4             magic;
 u2             minor_version;
 u2             major_version;
@@ -33,7 +40,7 @@ attribute_info attributes[attributes_count];
 */
 
 class ClassFile{
-	FileHandler fh; //class code handler
+	FileHandler fh; //file handler
 	unsigned int u4_magic;
 	unsigned int u2_minor_version;
 	unsigned int u2_major_version;
@@ -58,7 +65,6 @@ public:
 
 		auto fetch = [&](ClassUnit U){ return fh.fetch(U); };
 		const_pool = ConstantPool(fetch);
-		auto lookup = [&](unsigned int x){ return const_pool.lookup(x); };
 
 		//Read meta data
 		u4_magic = fh.fetch(U4);

@@ -1,3 +1,11 @@
+/**
+ * \brief The MethodInfo class contains the info related to a method in a classfile,
+ * the format is according to the JVM specification.
+ */
+
+#ifndef _VM_METHOD_INFO_H_
+#define _VM_METHOD_INFO_H_
+
 // method_info {
 //     u2             access_flags;
 //     u2             name_index;
@@ -6,16 +14,13 @@
 //     attribute_info attributes[attributes_count];
 // }
 
-#ifndef _VM_METHOD_INFO_H_
-#define _VM_METHOD_INFO_H_
-
 #include <vector>
 #include <string>
 #include <functional>
 #include "DefConstTrans.h"
 #include "AttributeInfo.h"
 
-class ConstantPool;
+class ConstantPool; //forward-reference
 
 class MethodInfo{
 	unsigned int u2_access_flags;

@@ -1,3 +1,12 @@
+/***************************************************************//**
+ * \brief The RunTimeEnvironment class keeps track of all loaded classes,
+ * it works by loading each ClassFile via add_class(), but
+ * NOTE that it can not be used until all classes are loaded.
+ *
+ * The RunTimeEnvironment do also have a Heap on which it allocates
+ * objects (and class variables).
+ ******************************************************************/
+
 #ifndef _VM_RUN_TIME_ENVIRONMENT_H_
 #define _VM_RUN_TIME_ENVIRONMENT_H_
 
@@ -7,12 +16,6 @@
 #include "ClassFile.h"
 #include "Heap.h"
 
-/*******************************************************************
- * The Run Time Environment class keeps track of all loaded classes,
- * it works by loading each ClassFile via add_class(), but 
- * NOTE that it can not be used until all classes are loaded and the
- * link() function is called which handles dynamic linking.
- ******************************************************************/
 class RunTimeEnvironment {
     std::map<std::string, ClassFile *> class_pool;
     Heap object_heap;
@@ -24,6 +27,9 @@ public:
         rte_lookup([&](std::string cn){ return get_class(cn); }),
         heap_push([&](ObjectRef * obj){ return object_heap.push(obj); }){}
 
+    /**
+     * Adds class to RunTimeEnvironment.
+     */
     void add_class(ClassFile * cf){
         cf->set_heap(heap_push);
         if(class_pool.find(cf->get_class_name()) == class_pool.end()){
